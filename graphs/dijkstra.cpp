@@ -4,27 +4,6 @@
 
 
 template <typename T>
-class graph {
-    public:
-        struct edge {
-            int from;
-            int to;
-            T cost;
-        };
-
-        vector<edge> edges;
-        vector<vector<int>> g;
-        int n;
-
-        graph(int _n) : n(_n) {
-            g.resize(n);
-        }
-
-        virtual int add(int from, int to, T cost) = 0;
-};
-
-
-template <typename T>
 vector<T> dijkstra(const graph<T> &g, int start) {
     assert(0 <= start && start < g.n);
     vector<T> dist(g.n, numeric_limits<T>::max());
