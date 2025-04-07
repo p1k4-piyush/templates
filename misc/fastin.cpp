@@ -1,4 +1,6 @@
 
+//	https://github.com/the-tourist/algo/
+
 
 static struct FastInput {
   static constexpr int BUF_SIZE = 1 << 20;

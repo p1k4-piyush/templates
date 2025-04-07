@@ -1,9 +1,10 @@
 
 //	https://github.com/the-tourist/algo/
-//	https://github.com/p1k4-piyush/templates/
 
 
 const int MOD = 998244353;
+// const int MOD = 1000000007;
+
 
 template <typename T>
 T inverse(T a, T m) {

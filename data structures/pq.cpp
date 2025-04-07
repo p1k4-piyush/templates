@@ -1,6 +1,6 @@
 
 //	https://github.com/the-tourist/algo/
-//	https://github.com/p1k4-piyush/templates/
+
 
 template <typename T, typename F>
 class Queue {

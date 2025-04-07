@@ -1,6 +1,5 @@
 
 //	https://github.com/the-tourist/algo/
-//	https://github.com/p1k4-piyush/templates/
 
 #include <ext/pb_ds/assoc_container.hpp>
 

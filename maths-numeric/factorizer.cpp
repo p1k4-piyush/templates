@@ -1,6 +1,5 @@
 
 //	https://github.com/the-tourist/algo/
-//	https://github.com/p1k4-piyush/templates/
 
 
 const int MOD = 998244353;
