@@ -1,0 +1,1 @@
+g++ -std=c++23 -O3 -Wextra -Wconversion -DDEBUG -Wshadow -Wall -DPIKA -fsanitize=undefined,address
