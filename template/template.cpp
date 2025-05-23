@@ -2,8 +2,9 @@
 using namespace std;
 
 typedef int64_t ll;
+// #define int ll
 
-const ll INF = ll(4e18) + 5;
+const ll inf = ll(4e18) + 5;
 const char nl = '\n';
 
 #ifdef PIKA 
@@ -12,12 +13,12 @@ const char nl = '\n';
 #define dbg(...)
 #endif
 
-int n;
-vector<int> arr;
 
-void solve(){
+
+void evermore(){
+    int n;
     cin >> n;
-    arr.assign(n,0);
+    vector<int> arr(n,0);
     
     for(int i = 0; i < n; i++){
         cin >> arr[i];
@@ -32,10 +33,10 @@ void solve(){
 signed main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
-    int t = 1;
-    cin >> t;
-    while(t--){
-        solve();
+    int number_of_albums = 1;
+    cin >> number_of_albums;
+    while(number_of_albums--){
+        evermore();
     }
     return 0;
 }
