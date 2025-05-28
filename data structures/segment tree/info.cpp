@@ -1,29 +1,29 @@
 
-//	https://github.com/the-tourist/algo/
+//  https://github.com/the-tourist/algo/blob/master/segtree/info.cpp
 
-
-struct Info {
+struct Info
+{
     int cur;
-    
-    Info(){
+
+    Info()
+    {
         cur = 0;
     }
 
-    Info(int val){
+    Info(int val)
+    {
         cur = val;
     }
 
-    
-    Info Unite(const Info& b) const {
+    Info Unite(const Info& b) const
+    {
         Info res;
-
 
         return res;
     }
 
-    static Info GetDefault([[maybe_unused]] int l, [[maybe_unused]] int r) {
+    static Info GetDefault([[maybe_unused]] int l, [[maybe_unused]] int r)
+    {
         return Info();
     }
 };
-
-

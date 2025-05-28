@@ -1,34 +1,35 @@
 
-//	https://github.com/the-tourist/algo/
+//  https://github.com/the-tourist/algo/blob/master/segtree/tag.cpp
 
-
-struct Tag {
+struct Tag
+{
     int add;
 
-    Tag(){
+    Tag()
+    {
         add = 0;
     }
 
-    Tag(int val){
+    Tag(int val)
+    {
         add = val;
     }
 
-    bool ApplyTo(Info& a, [[maybe_unused]] int l, [[maybe_unused]] int r) const {
-        
+    bool ApplyTo(Info& a, [[maybe_unused]] int l, [[maybe_unused]] int r) const
+    {
 
         return true;
     }
 
-    void ApplyTo(Tag& t) const {
-        
-        t.add += add;
+    void ApplyTo(Tag& t) const
+    {
 
+        t.add += add;
     }
 
-    bool Empty() const {
+    bool Empty() const
+    {
 
         return add == 0;
     }
 };
-
-
