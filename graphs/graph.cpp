@@ -1,21 +1,21 @@
 
 //	https://github.com/the-tourist/algo/
 
-template <typename T> class graph
-{
-  public:
-    struct edge
-    {
+template <typename T>
+class graph {
+public:
+    struct edge {
         int from;
         int to;
-        T   cost;
+        T cost;
     };
 
-    vector<edge>        edges;
+    vector<edge> edges;
     vector<vector<int>> g;
-    int                 n;
+    int n;
 
-    graph(int _n) : n(_n)
+    graph(int _n)
+        : n(_n)
     {
         g.resize(n);
     }

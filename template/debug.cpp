@@ -1,11 +1,14 @@
 
 //	https://github.com/the-tourist/algo/
 
-template <typename A, typename B> string to_string(pair<A, B> p);
+template <typename A, typename B>
+string to_string(pair<A, B> p);
 
-template <typename A, typename B, typename C> string to_string(tuple<A, B, C> p);
+template <typename A, typename B, typename C>
+string to_string(tuple<A, B, C> p);
 
-template <typename A, typename B, typename C, typename D> string to_string(tuple<A, B, C, D> p);
+template <typename A, typename B, typename C, typename D>
+string to_string(tuple<A, B, C, D> p);
 
 string to_string(const string& s)
 {
@@ -24,12 +27,10 @@ string to_string(bool b)
 
 string to_string(vector<bool> v)
 {
-    bool   first = true;
-    string res   = "{";
-    for (int i = 0; i < static_cast<int>(v.size()); i++)
-    {
-        if (!first)
-        {
+    bool first = true;
+    string res = "{";
+    for (int i = 0; i < static_cast<int>(v.size()); i++) {
+        if (!first) {
             res += ", ";
         }
         first = false;
@@ -39,24 +40,23 @@ string to_string(vector<bool> v)
     return res;
 }
 
-template <size_t N> string to_string(bitset<N> v)
+template <size_t N>
+string to_string(bitset<N> v)
 {
     string res = "";
-    for (size_t i = 0; i < N; i++)
-    {
+    for (size_t i = 0; i < N; i++) {
         res += static_cast<char>('0' + v[i]);
     }
     return res;
 }
 
-template <typename A> string to_string(A v)
+template <typename A>
+string to_string(A v)
 {
-    bool   first = true;
-    string res   = "{";
-    for (const auto& x : v)
-    {
-        if (!first)
-        {
+    bool first = true;
+    string res = "{";
+    for (const auto& x : v) {
+        if (!first) {
             res += ", ";
         }
         first = false;
@@ -66,21 +66,22 @@ template <typename A> string to_string(A v)
     return res;
 }
 
-template <typename A, typename B> string to_string(pair<A, B> p)
+template <typename A, typename B>
+string to_string(pair<A, B> p)
 {
     return "(" + to_string(p.first) + ", " + to_string(p.second) + ")";
 }
 
-template <typename A, typename B, typename C> string to_string(tuple<A, B, C> p)
+template <typename A, typename B, typename C>
+string to_string(tuple<A, B, C> p)
 {
-    return "(" + to_string(get<0>(p)) + ", " + to_string(get<1>(p)) + ", " + to_string(get<2>(p)) +
-           ")";
+    return "(" + to_string(get<0>(p)) + ", " + to_string(get<1>(p)) + ", " + to_string(get<2>(p)) + ")";
 }
 
-template <typename A, typename B, typename C, typename D> string to_string(tuple<A, B, C, D> p)
+template <typename A, typename B, typename C, typename D>
+string to_string(tuple<A, B, C, D> p)
 {
-    return "(" + to_string(get<0>(p)) + ", " + to_string(get<1>(p)) + ", " + to_string(get<2>(p)) +
-           ", " + to_string(get<3>(p)) + ")";
+    return "(" + to_string(get<0>(p)) + ", " + to_string(get<1>(p)) + ", " + to_string(get<2>(p)) + ", " + to_string(get<3>(p)) + ")";
 }
 
 void debug_out()
@@ -88,15 +89,16 @@ void debug_out()
     cerr << endl;
 }
 
-template <typename Head, typename... Tail> void debug_out(Head H, Tail... T)
+template <typename Head, typename... Tail>
+void debug_out(Head H, Tail... T)
 {
     cerr << " " << to_string(H);
     debug_out(T...);
 }
 
 #ifdef DEBUG
-#define dbg(...)                                                                                   \
-    cerr << "\e[91m[" << __LINE__ << "]\t" << #__VA_ARGS__ << ":", debug_out(__VA_ARGS__),         \
+#define dbg(...)                                                                           \
+    cerr << "\e[91m[" << __LINE__ << "]\t" << #__VA_ARGS__ << ":", debug_out(__VA_ARGS__), \
         cerr << "\e[39m"
 #else
 #define dbg(...)

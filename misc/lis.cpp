@@ -1,18 +1,15 @@
 
 //	https://github.com/the-tourist/algo/
 
-template <typename T> int lis(const vector<T>& a)
+template <typename T>
+int lis(const vector<T>& a)
 {
     vector<T> u;
-    for (const T& x : a)
-    {
+    for (const T& x : a) {
         auto it = lower_bound(u.begin(), u.end(), x);
-        if (it == u.end())
-        {
+        if (it == u.end()) {
             u.push_back(x);
-        }
-        else
-        {
+        } else {
             *it = x;
         };
     };

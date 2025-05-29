@@ -1,27 +1,25 @@
 
 //	https://github.com/the-tourist/algo/
 
-static struct FastInput
-{
+static struct FastInput {
     static constexpr int BUF_SIZE = 1 << 20;
-    char                 buf[BUF_SIZE];
-    size_t               chars_read = 0;
-    size_t               buf_pos    = 0;
-    FILE*                in         = stdin;
-    char                 cur        = 0;
+    char buf[BUF_SIZE];
+    size_t chars_read = 0;
+    size_t buf_pos = 0;
+    FILE* in = stdin;
+    char cur = 0;
 
     inline char get_char()
     {
-        if (buf_pos >= chars_read)
-        {
+        if (buf_pos >= chars_read) {
             chars_read = fread(buf, 1, BUF_SIZE, in);
-            buf_pos    = 0;
-            buf[0]     = (chars_read == 0 ? -1 : buf[0]);
+            buf_pos = 0;
+            buf[0] = (chars_read == 0 ? -1 : buf[0]);
         }
         return cur = buf[buf_pos++];
     }
 
-    inline void tie(int) {}
+    inline void tie(int) { }
 
     inline explicit operator bool()
     {
@@ -35,8 +33,7 @@ static struct FastInput
 
     inline bool skip_blanks()
     {
-        while (is_blank(cur) && cur != -1)
-        {
+        while (is_blank(cur) && cur != -1) {
             get_char();
         }
         return cur != -1;
@@ -51,31 +48,27 @@ static struct FastInput
 
     inline FastInput& operator>>(string& s)
     {
-        if (skip_blanks())
-        {
+        if (skip_blanks()) {
             s.clear();
-            do
-            {
+            do {
                 s += cur;
             } while (!is_blank(get_char()));
         }
         return *this;
     }
 
-    template <typename T> inline FastInput& read_integer(T& n)
+    template <typename T>
+    inline FastInput& read_integer(T& n)
     {
         // unsafe, doesn't check that characters are actually digits
         n = 0;
-        if (skip_blanks())
-        {
+        if (skip_blanks()) {
             int sign = +1;
-            if (cur == '-')
-            {
+            if (cur == '-') {
                 sign = -1;
                 get_char();
             }
-            do
-            {
+            do {
                 n += n + (n << 3) + cur - '0';
             } while (!is_blank(get_char()));
             n *= sign;
@@ -101,8 +94,7 @@ static struct FastInput
     {
         // not sure if really fast, for compatibility only
         n = 0;
-        if (skip_blanks())
-        {
+        if (skip_blanks()) {
             string s;
             (*this) >> s;
             sscanf(s.c_str(), "%lf", &n);

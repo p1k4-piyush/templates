@@ -1,9 +1,9 @@
 
 //	https://github.com/the-tourist/algo/
 
-template <typename T> class dfs_forest : public forest<T>
-{
-  public:
+template <typename T>
+class dfs_forest : public forest<T> {
+public:
     using forest<T>::edges;
     using forest<T>::g;
     using forest<T>::n;
@@ -16,21 +16,24 @@ template <typename T> class dfs_forest : public forest<T>
     vector<int> sz;
     vector<int> root;
     vector<int> depth;
-    vector<T>   dist;
+    vector<T> dist;
 
-    dfs_forest(int _n) : forest<T>(_n) {}
+    dfs_forest(int _n)
+        : forest<T>(_n)
+    {
+    }
 
     void init()
     {
         pv = vector<int>(n, -1);
         pe = vector<int>(n, -1);
         order.clear();
-        pos   = vector<int>(n, -1);
-        end   = vector<int>(n, -1);
-        sz    = vector<int>(n, 0);
-        root  = vector<int>(n, -1);
+        pos = vector<int>(n, -1);
+        end = vector<int>(n, -1);
+        sz = vector<int>(n, 0);
+        root = vector<int>(n, -1);
         depth = vector<int>(n, -1);
-        dist  = vector<T>(n);
+        dist = vector<T>(n);
     }
 
     void clear()
@@ -46,25 +49,23 @@ template <typename T> class dfs_forest : public forest<T>
         dist.clear();
     }
 
-  private:
+private:
     void do_dfs(int v)
     {
         pos[v] = (int)order.size();
         order.push_back(v);
         sz[v] = 1;
-        for (int id : g[v])
-        {
-            if (id == pe[v])
-            {
+        for (int id : g[v]) {
+            if (id == pe[v]) {
                 continue;
             }
-            auto& e   = edges[id];
-            int   to  = e.from ^ e.to ^ v;
+            auto& e = edges[id];
+            int to = e.from ^ e.to ^ v;
             depth[to] = depth[v] + 1;
-            dist[to]  = dist[v] + e.cost;
-            pv[to]    = v;
-            pe[to]    = id;
-            root[to]  = (root[v] != -1 ? root[v] : to);
+            dist[to] = dist[v] + e.cost;
+            pv[to] = v;
+            pe[to] = id;
+            root[to] = (root[v] != -1 ? root[v] : to);
             do_dfs(to);
             sz[v] += sz[to];
         }
@@ -74,23 +75,19 @@ template <typename T> class dfs_forest : public forest<T>
     void do_dfs_from(int v)
     {
         depth[v] = 0;
-        dist[v]  = T{};
-        root[v]  = v;
+        dist[v] = T {};
+        root[v] = v;
         pv[v] = pe[v] = -1;
         do_dfs(v);
     }
 
-  public:
+public:
     void dfs(int v, bool clear_order = true)
     {
-        if (pv.empty())
-        {
+        if (pv.empty()) {
             init();
-        }
-        else
-        {
-            if (clear_order)
-            {
+        } else {
+            if (clear_order) {
                 order.clear();
             }
         }
@@ -100,10 +97,8 @@ template <typename T> class dfs_forest : public forest<T>
     void dfs_all()
     {
         init();
-        for (int v = 0; v < n; v++)
-        {
-            if (depth[v] == -1)
-            {
+        for (int v = 0; v < n; v++) {
+            if (depth[v] == -1) {
                 do_dfs_from(v);
             }
         }

@@ -1,14 +1,17 @@
 
 //	https://github.com/the-tourist/algo/
 
-template <typename T> class undigraph : public graph<T>
-{
-  public:
+template <typename T>
+class undigraph : public graph<T> {
+public:
     using graph<T>::edges;
     using graph<T>::g;
     using graph<T>::n;
 
-    undigraph(int _n) : graph<T>(_n) {}
+    undigraph(int _n)
+        : graph<T>(_n)
+    {
+    }
 
     int add(int from, int to, T cost = 1)
     {
@@ -16,7 +19,7 @@ template <typename T> class undigraph : public graph<T>
         int id = (int)edges.size();
         g[from].push_back(id);
         g[to].push_back(id);
-        edges.push_back({from, to, cost});
+        edges.push_back({ from, to, cost });
         return id;
     }
 };

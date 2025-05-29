@@ -5,12 +5,12 @@
 using namespace std;
 
 typedef int64_t ll;
-const ll        INF = ll(4e18) + 5;
-const char      nl  = '\n';
+const ll INF = ll(4e18) + 5;
+const char nl = '\n';
 
-const ll  e18 = ll(1e18);
-const int e9  = int(1e9);
-const int e5  = int(1e5);
+const ll e18 = ll(1e18);
+const int e9 = int(1e9);
+const int e5 = int(1e5);
 
 #ifdef DEBUG
 #include "/home/dbg/debug.cpp"
@@ -29,8 +29,7 @@ void normal()
 
     uniform_int_distribution<int> dist(1, e9);
 
-    while (n--)
-    {
+    while (n--) {
         cout << dist(rng) << " ";
     }
 
@@ -47,8 +46,7 @@ void normal_n()
 
     uniform_int_distribution<int> dist(1, n);
 
-    while (n--)
-    {
+    while (n--) {
         cout << dist(rng) << " ";
     }
 
@@ -78,8 +76,7 @@ void perm()
     iota(perm.begin(), perm.end(), 1);
     shuffle(perm.begin(), perm.end(), rng);
 
-    for (auto i : perm)
-    {
+    for (auto i : perm) {
         cout << i << " ";
     }
 
@@ -90,43 +87,38 @@ void perm()
 void tree()
 {
     uniform_int_distribution<int> tt(1, 5);
-    int                           n = 5 + tt(rng);
+    int n = 5 + tt(rng);
 
-    vector<int>                   prufer(n - 2);
+    vector<int> prufer(n - 2);
     uniform_int_distribution<int> dist(1, n);
 
-    for (int i = 0; i < n - 2; i++)
-    {
+    for (int i = 0; i < n - 2; i++) {
         prufer[i] = dist(rng);
     }
 
     vector<int> degree(n + 1, 1);
 
-    for (int x : prufer)
-    {
+    for (int x : prufer) {
         degree[x]++;
     }
 
     set<int> leaves;
 
-    for (int i = 1; i <= n; i++)
-    {
+    for (int i = 1; i <= n; i++) {
         if (degree[i] == 1)
             leaves.insert(i);
     }
 
     vector<pair<int, int>> edges;
 
-    for (int x : prufer)
-    {
+    for (int x : prufer) {
         int leaf = *leaves.begin();
         leaves.erase(leaves.begin());
 
-        edges.push_back({leaf, x});
+        edges.push_back({ leaf, x });
         degree[x]--;
 
-        if (degree[x] == 1)
-        {
+        if (degree[x] == 1) {
             leaves.insert(x);
         }
     }
@@ -135,13 +127,11 @@ void tree()
     leaves.erase(leaves.begin());
 
     int v = *leaves.begin();
-    edges.push_back({u, v});
+    edges.push_back({ u, v });
 
     uniform_int_distribution<int> b(0, 1);
-    for (auto& edge : edges)
-    {
-        if (b(rng) == 1)
-        {
+    for (auto& edge : edges) {
+        if (b(rng) == 1) {
             swap(edge.first, edge.second);
         }
     }
@@ -150,8 +140,7 @@ void tree()
 
     cout << n << nl;
 
-    for (auto& edge : edges)
-    {
+    for (auto& edge : edges) {
         cout << edge.first << " " << edge.second << nl;
     }
 
@@ -168,14 +157,12 @@ void tree_basic()
     vector<pair<int, int>> vec;
 
     uniform_int_distribution<int> b(0, 1);
-    for (int i = 2; i <= n; i++)
-    {
+    for (int i = 2; i <= n; i++) {
         int par = uniform_int_distribution<int>(1, i - 1)(rng);
 
-        pair<int, int> edge = {par, i};
+        pair<int, int> edge = { par, i };
 
-        if (b(rng))
-        {
+        if (b(rng)) {
             swap(edge.first, edge.second);
         }
 
@@ -184,8 +171,7 @@ void tree_basic()
 
     shuffle(vec.begin(), vec.end(), rng);
 
-    for (auto i : vec)
-    {
+    for (auto i : vec) {
         cout << i.first << " " << i.second << nl;
     }
 
@@ -210,8 +196,7 @@ int main()
     int t = 1;
     cout << t << nl;
 
-    for (int tt = 0; tt < t; tt++)
-    {
+    for (int tt = 0; tt < t; tt++) {
 
         // normal();
         // normal_n();

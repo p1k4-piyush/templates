@@ -4,11 +4,11 @@
 const int MOD = 998244353;
 // const int MOD = 1000000007;
 
-template <typename T> T inverse(T a, T m)
+template <typename T>
+T inverse(T a, T m)
 {
     T u = 0, v = 1;
-    while (a != 0)
-    {
+    while (a != 0) {
         T t = m / a;
         m -= t * a;
         swap(a, m);
@@ -19,18 +19,23 @@ template <typename T> T inverse(T a, T m)
     return u;
 }
 
-template <typename T> class Modular
-{
-  public:
+template <typename T>
+class Modular {
+public:
     using Type = typename decay<decltype(T::value)>::type;
 
-    constexpr Modular() : value() {}
-    template <typename U> Modular(const U& x)
+    constexpr Modular()
+        : value()
+    {
+    }
+    template <typename U>
+    Modular(const U& x)
     {
         value = normalize(x);
     }
 
-    template <typename U> static Type normalize(const U& x)
+    template <typename U>
+    static Type normalize(const U& x)
     {
         Type v;
         if (-mod() <= x && x < mod())
@@ -46,7 +51,8 @@ template <typename T> class Modular
     {
         return value;
     }
-    template <typename U> explicit operator U() const
+    template <typename U>
+    explicit operator U() const
     {
         return static_cast<U>(value);
     }
@@ -67,11 +73,13 @@ template <typename T> class Modular
         value += (value < 0) * mod();
         return *this;
     }
-    template <typename U> Modular& operator+=(const U& other)
+    template <typename U>
+    Modular& operator+=(const U& other)
     {
         return *this += Modular(other);
     }
-    template <typename U> Modular& operator-=(const U& other)
+    template <typename U>
+    Modular& operator-=(const U& other)
     {
         return *this -= Modular(other);
     }
@@ -112,7 +120,7 @@ template <typename T> class Modular
     operator*=(const Modular& rhs)
     {
         int64_t q = int64_t(static_cast<long double>(value) * rhs.value / mod());
-        value     = normalize(value * rhs.value - q * mod());
+        value = normalize(value * rhs.value - q * mod());
         return *this;
     }
     template <typename U = T>
@@ -133,106 +141,128 @@ template <typename T> class Modular
         return x.value;
     }
 
-    template <typename U> friend bool operator==(const Modular<U>& lhs, const Modular<U>& rhs);
+    template <typename U>
+    friend bool operator==(const Modular<U>& lhs, const Modular<U>& rhs);
 
-    template <typename U> friend bool operator<(const Modular<U>& lhs, const Modular<U>& rhs);
+    template <typename U>
+    friend bool operator<(const Modular<U>& lhs, const Modular<U>& rhs);
 
-    template <typename V, typename U> friend V& operator>>(V& stream, Modular<U>& number);
+    template <typename V, typename U>
+    friend V& operator>>(V& stream, Modular<U>& number);
 
-  private:
+private:
     Type value;
 };
 
-template <typename T> bool operator==(const Modular<T>& lhs, const Modular<T>& rhs)
+template <typename T>
+bool operator==(const Modular<T>& lhs, const Modular<T>& rhs)
 {
     return lhs.value == rhs.value;
 }
-template <typename T, typename U> bool operator==(const Modular<T>& lhs, U rhs)
+template <typename T, typename U>
+bool operator==(const Modular<T>& lhs, U rhs)
 {
     return lhs == Modular<T>(rhs);
 }
-template <typename T, typename U> bool operator==(U lhs, const Modular<T>& rhs)
+template <typename T, typename U>
+bool operator==(U lhs, const Modular<T>& rhs)
 {
     return Modular<T>(lhs) == rhs;
 }
 
-template <typename T> bool operator!=(const Modular<T>& lhs, const Modular<T>& rhs)
+template <typename T>
+bool operator!=(const Modular<T>& lhs, const Modular<T>& rhs)
 {
     return !(lhs == rhs);
 }
-template <typename T, typename U> bool operator!=(const Modular<T>& lhs, U rhs)
+template <typename T, typename U>
+bool operator!=(const Modular<T>& lhs, U rhs)
 {
     return !(lhs == rhs);
 }
-template <typename T, typename U> bool operator!=(U lhs, const Modular<T>& rhs)
+template <typename T, typename U>
+bool operator!=(U lhs, const Modular<T>& rhs)
 {
     return !(lhs == rhs);
 }
 
-template <typename T> bool operator<(const Modular<T>& lhs, const Modular<T>& rhs)
+template <typename T>
+bool operator<(const Modular<T>& lhs, const Modular<T>& rhs)
 {
     return lhs.value < rhs.value;
 }
 
-template <typename T> Modular<T> operator+(const Modular<T>& lhs, const Modular<T>& rhs)
+template <typename T>
+Modular<T> operator+(const Modular<T>& lhs, const Modular<T>& rhs)
 {
     return Modular<T>(lhs) += rhs;
 }
-template <typename T, typename U> Modular<T> operator+(const Modular<T>& lhs, U rhs)
+template <typename T, typename U>
+Modular<T> operator+(const Modular<T>& lhs, U rhs)
 {
     return Modular<T>(lhs) += rhs;
 }
-template <typename T, typename U> Modular<T> operator+(U lhs, const Modular<T>& rhs)
+template <typename T, typename U>
+Modular<T> operator+(U lhs, const Modular<T>& rhs)
 {
     return Modular<T>(lhs) += rhs;
 }
 
-template <typename T> Modular<T> operator-(const Modular<T>& lhs, const Modular<T>& rhs)
+template <typename T>
+Modular<T> operator-(const Modular<T>& lhs, const Modular<T>& rhs)
 {
     return Modular<T>(lhs) -= rhs;
 }
-template <typename T, typename U> Modular<T> operator-(const Modular<T>& lhs, U rhs)
+template <typename T, typename U>
+Modular<T> operator-(const Modular<T>& lhs, U rhs)
 {
     return Modular<T>(lhs) -= rhs;
 }
-template <typename T, typename U> Modular<T> operator-(U lhs, const Modular<T>& rhs)
+template <typename T, typename U>
+Modular<T> operator-(U lhs, const Modular<T>& rhs)
 {
     return Modular<T>(lhs) -= rhs;
 }
 
-template <typename T> Modular<T> operator*(const Modular<T>& lhs, const Modular<T>& rhs)
+template <typename T>
+Modular<T> operator*(const Modular<T>& lhs, const Modular<T>& rhs)
 {
     return Modular<T>(lhs) *= rhs;
 }
-template <typename T, typename U> Modular<T> operator*(const Modular<T>& lhs, U rhs)
+template <typename T, typename U>
+Modular<T> operator*(const Modular<T>& lhs, U rhs)
 {
     return Modular<T>(lhs) *= rhs;
 }
-template <typename T, typename U> Modular<T> operator*(U lhs, const Modular<T>& rhs)
+template <typename T, typename U>
+Modular<T> operator*(U lhs, const Modular<T>& rhs)
 {
     return Modular<T>(lhs) *= rhs;
 }
 
-template <typename T> Modular<T> operator/(const Modular<T>& lhs, const Modular<T>& rhs)
+template <typename T>
+Modular<T> operator/(const Modular<T>& lhs, const Modular<T>& rhs)
 {
     return Modular<T>(lhs) /= rhs;
 }
-template <typename T, typename U> Modular<T> operator/(const Modular<T>& lhs, U rhs)
+template <typename T, typename U>
+Modular<T> operator/(const Modular<T>& lhs, U rhs)
 {
     return Modular<T>(lhs) /= rhs;
 }
-template <typename T, typename U> Modular<T> operator/(U lhs, const Modular<T>& rhs)
+template <typename T, typename U>
+Modular<T> operator/(U lhs, const Modular<T>& rhs)
 {
     return Modular<T>(lhs) /= rhs;
 }
 
-template <typename T, typename U> Modular<T> power(const Modular<T>& a, const U& b)
+template <typename T, typename U>
+Modular<T> power(const Modular<T>& a, const U& b)
 {
     assert(b >= 0);
     Modular<T> x = a, res = 1;
-    U          p = b;
-    while (p > 0)
-    {
+    U p = b;
+    while (p > 0) {
         if (p & 1)
             res *= x;
         x *= x;
@@ -241,24 +271,28 @@ template <typename T, typename U> Modular<T> power(const Modular<T>& a, const U&
     return res;
 }
 
-template <typename T> bool IsZero(const Modular<T>& number)
+template <typename T>
+bool IsZero(const Modular<T>& number)
 {
     return number() == 0;
 }
 
-template <typename T> string to_string(const Modular<T>& number)
+template <typename T>
+string to_string(const Modular<T>& number)
 {
     return to_string(number());
 }
 
 // U == std::ostream? but done this way because of fastoutput
-template <typename U, typename T> U& operator<<(U& stream, const Modular<T>& number)
+template <typename U, typename T>
+U& operator<<(U& stream, const Modular<T>& number)
 {
     return stream << number();
 }
 
 // U == std::istream? but done this way because of fastinput
-template <typename U, typename T> U& operator>>(U& stream, Modular<T>& number)
+template <typename U, typename T>
+U& operator>>(U& stream, Modular<T>& number)
 {
     typename common_type<typename Modular<T>::Type, int64_t>::type x;
     stream >> x;
@@ -274,7 +308,7 @@ template <typename U, typename T> U& operator>>(U& stream, Modular<T>& number)
 // using Mint = Modular<VarMod>;
 
 constexpr int md = MOD;
-using Mint       = Modular<std::integral_constant<decay<decltype(md)>::type, md>>;
+using Mint = Modular<std::integral_constant<decay<decltype(md)>::type, md>>;
 
 // vector<Mint> fact(1, 1);
 // vector<Mint> inv_fact(1, 1);
