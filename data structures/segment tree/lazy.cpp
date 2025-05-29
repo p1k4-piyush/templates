@@ -1,19 +1,18 @@
 
 //  https://github.com/the-tourist/algo/blob/master/segtree/lazy.cpp
 
-template <typename Info, typename Tag> class LazySegmentTree
-{
-  public:
-    int                       n;
-    vector<Info>              infos;
-    vector<Tag>               tags;
+template <typename Info, typename Tag>
+class LazySegmentTree {
+public:
+    int n;
+    vector<Info> infos;
+    vector<Tag> tags;
     seg_tree::in_order_layout layout;
 
     void Apply(seg_tree::point a, const Tag& t)
     {
         auto [l, r] = layout.get_node_bounds(a);
-        if (!t.ApplyTo(infos[a], l, r))
-        {
+        if (!t.ApplyTo(infos[a], l, r)) {
             assert(a < n);
             DowndateNode(a);
             Apply(a.c(0), t);
@@ -21,16 +20,14 @@ template <typename Info, typename Tag> class LazySegmentTree
             UpdateNode(a);
             return;
         }
-        if (a < n)
-        {
+        if (a < n) {
             t.ApplyTo(tags[a]);
         }
     }
 
     void DowndateNode(seg_tree::point a)
     {
-        if (!tags[a].Empty())
-        {
+        if (!tags[a].Empty()) {
             Apply(a.c(0), tags[a]);
             Apply(a.c(1), tags[a]);
             tags[a] = Tag();
@@ -42,19 +39,24 @@ template <typename Info, typename Tag> class LazySegmentTree
         infos[a] = infos[a.c(0)].Unite(infos[a.c(1)]);
     }
 
-    LazySegmentTree() : LazySegmentTree(0) {}
-    LazySegmentTree(int n_) : LazySegmentTree(vector<Info>(n_)) {}
-    LazySegmentTree(const vector<Info>& a) : n(int(a.size()))
+    LazySegmentTree()
+        : LazySegmentTree(0)
+    {
+    }
+    LazySegmentTree(int n_)
+        : LazySegmentTree(vector<Info>(n_))
+    {
+    }
+    LazySegmentTree(const vector<Info>& a)
+        : n(int(a.size()))
     {
         infos.resize(2 * n);
         tags.resize(n);
         layout = seg_tree::in_order_layout(n);
-        for (int i = 0; i < n; i++)
-        {
+        for (int i = 0; i < n; i++) {
             infos[layout.get_point(i)] = a[i];
         }
-        for (int i = n - 1; i >= 1; i--)
-        {
+        for (int i = n - 1; i >= 1; i--) {
             UpdateNode(seg_tree::point(i));
         }
     }
@@ -91,36 +93,30 @@ template <typename Info, typename Tag> class LazySegmentTree
         return infos[pt];
     }
 
-    template <typename F> int MaxRight(int l, F f)
+    template <typename F>
+    int MaxRight(int l, F f)
     {
         auto rng = layout.get_range(l, n);
         rng.for_parents_down([&](seg_tree::point a) { DowndateNode(a); });
-        int  res = n;
+        int res = n;
         Info sum;
         rng.for_each_l_to_r(
-            [&](seg_tree::point a)
-            {
-                if (res != n)
-                {
+            [&](seg_tree::point a) {
+                if (res != n) {
                     return;
                 }
                 auto new_sum = sum.Unite(infos[a]);
-                if (f(new_sum))
-                {
+                if (f(new_sum)) {
                     sum = new_sum;
                     return;
                 }
-                while (a < n)
-                {
+                while (a < n) {
                     DowndateNode(a);
                     new_sum = sum.Unite(infos[a.c(0)]);
-                    if (f(new_sum))
-                    {
+                    if (f(new_sum)) {
                         sum = new_sum;
-                        a   = a.c(1);
-                    }
-                    else
-                    {
+                        a = a.c(1);
+                    } else {
                         a = a.c(0);
                     }
                 }
@@ -129,36 +125,30 @@ template <typename Info, typename Tag> class LazySegmentTree
         return res;
     }
 
-    template <typename F> int MinLeft(int r, F f)
+    template <typename F>
+    int MinLeft(int r, F f)
     {
         auto rng = layout.get_range(0, r);
         rng.for_parents_down([&](seg_tree::point a) { DowndateNode(a); });
-        int  res = 0;
+        int res = 0;
         Info sum;
         rng.for_each_r_to_l(
-            [&](seg_tree::point a)
-            {
-                if (res != 0)
-                {
+            [&](seg_tree::point a) {
+                if (res != 0) {
                     return;
                 }
                 auto new_sum = infos[a].Unite(sum);
-                if (f(new_sum))
-                {
+                if (f(new_sum)) {
                     sum = new_sum;
                     return;
                 }
-                while (a < n)
-                {
+                while (a < n) {
                     DowndateNode(a);
                     new_sum = infos[a.c(1)].Unite(sum);
-                    if (f(new_sum))
-                    {
+                    if (f(new_sum)) {
                         sum = new_sum;
-                        a   = a.c(0);
-                    }
-                    else
-                    {
+                        a = a.c(0);
+                    } else {
                         a = a.c(1);
                     }
                 }

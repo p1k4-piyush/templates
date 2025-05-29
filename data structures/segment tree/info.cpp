@@ -1,8 +1,7 @@
 
 //  https://github.com/the-tourist/algo/blob/master/segtree/info.cpp
 
-struct Info
-{
+struct Info {
     int cur;
 
     Info()

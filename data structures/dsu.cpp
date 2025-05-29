@@ -1,13 +1,13 @@
 
 //	https://github.com/the-tourist/algo/blob/master/data/dsu.cpp
 
-class dsu
-{
-  public:
+class dsu {
+public:
     vector<int> p;
-    int         n;
+    int n;
 
-    dsu(int _n) : n(_n)
+    dsu(int _n)
+        : n(_n)
     {
         p.resize(n);
         iota(p.begin(), p.end(), 0);
@@ -22,8 +22,7 @@ class dsu
     {
         x = get(x);
         y = get(y);
-        if (x != y)
-        {
+        if (x != y) {
             p[x] = y;
             return true;
         }

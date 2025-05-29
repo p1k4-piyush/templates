@@ -1,1 +1,1 @@
-g++ -std=c++23 -O3 -fsanitize=undefined,address
+g++ -std=c++23 -fsanitize=undefined,address
