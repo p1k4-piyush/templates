@@ -1,4 +1,4 @@
-#include <bits/stdc++.h>
+#include "bits/stdc++.h"
 using namespace std;
 
 typedef int64_t ll;
@@ -8,7 +8,7 @@ const ll inf = ll(4e18) + 5;
 const char nl = '\n';
 
 #ifdef PIKA
-#include "/Users/piyushkeshan/cpp_template_library/template/debug.cpp"
+#include "/Users/piyushkeshan/Documents/cpp_template_library/template/debug.cpp"
 #else
 #define dbg(...)
 #endif
