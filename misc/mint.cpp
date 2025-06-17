@@ -1,8 +1,4 @@
-
 //	https://github.com/the-tourist/algo/
-
-const int MOD = 998244353;
-// const int MOD = 1000000007;
 
 template <typename T>
 T inverse(T a, T m)
@@ -306,6 +302,9 @@ U& operator>>(U& stream, Modular<T>& number)
 // ModType VarMod::value;
 // ModType& md = VarMod::value;
 // using Mint = Modular<VarMod>;
+
+const int MOD = 998244353;
+// const int MOD = 1000000007;
 
 constexpr int md = MOD;
 using Mint = Modular<std::integral_constant<decay<decltype(md)>::type, md>>;
