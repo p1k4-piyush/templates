@@ -1,93 +1,114 @@
 
 //	https://github.com/p1k4-piyush/templates/
 
-#include <bits/stdc++.h>
+#include "bits/stdc++.h"
+#include <string>
+
 using namespace std;
 
-typedef int64_t ll;
-const ll INF = ll(4e18) + 5;
-const char nl = '\n';
-
-const ll e18 = ll(1e18);
-const int e9 = int(1e9);
-const int e5 = int(1e5);
-
-#ifdef DEBUG
-#include "/home/dbg/debug.cpp"
+#ifdef PIKA
+#include "/Users/piyushkeshan/Documents/cpp_template_library/template/dbg.cpp"
 #else
 #define dbg(...)
 #endif
+
+typedef int64_t ll;
+// #defint int ll
+
+const ll inf = ll(4e18) + 5;
+const char nl = '\n';
 
 mt19937_64 rng((unsigned int)chrono::steady_clock::now().time_since_epoch().count());
 
 void normal()
 {
-    uniform_int_distribution<int> tt(0, e5);
+    uniform_int_distribution<int> tt(0, 2e5);
+    uniform_int_distribution<int> dist(1, 1e9);
 
-    int n = e5 + tt(rng);
-    cout << n << nl;
+    string s;
+    int count = 0;
 
-    uniform_int_distribution<int> dist(1, e9);
+    while (count < 2e5) {
+        int n = tt(rng);
+        s += (to_string(n) + nl);
 
-    while (n--) {
-        cout << dist(rng) << " ";
+        while (n--) {
+            s += (to_string(dist(rng)) + " ");
+        }
+
+        s += nl;
+        count += n;
     }
-
-    cout << nl;
+    cout << count << nl << s;
     return;
 }
 
 void normal_n()
 {
-    uniform_int_distribution<int> tt(0, e5);
+    uniform_int_distribution<int> tt(0, 2e5);
 
-    int n = e5 + tt(rng);
-    cout << n << nl;
+    string s;
+    int count = 0;
 
-    uniform_int_distribution<int> dist(1, n);
+    while (count < 2e5) {
+        int n = tt(rng);
+        s += (to_string(n) + nl);
 
-    while (n--) {
-        cout << dist(rng) << " ";
+        uniform_int_distribution<int> dist(1, n);
+
+        while (n--) {
+            s += (to_string(dist(rng)) + " ");
+        }
+
+        s += nl;
+        count += n;
     }
-
-    cout << nl;
+    cout << count << nl << s;
     return;
 }
 
 void single_n()
 {
-    uniform_int_distribution<ll> tt(1, e18);
-
-    ll n = tt(rng);
-    cout << n << nl;
+    uniform_int_distribution<ll> tt(1, ll(1e18));
+    cout << "1000" << nl;
+    for (int i = 0; i < 1000; i++) {
+        cout << tt(rng) << nl;
+    }
 
     return;
 }
 
 void perm()
 {
-    uniform_int_distribution<int> tt(0, e5);
+    uniform_int_distribution<int> tt(0, 2e5);
 
-    int n = 100000 + tt(rng);
-    cout << n << nl;
+    string s;
+    int count = 0;
 
-    vector<int> perm(n);
+    while (count < 2e5) {
+        int n = tt(rng);
+        s += (to_string(n) + nl);
 
-    iota(perm.begin(), perm.end(), 1);
-    shuffle(perm.begin(), perm.end(), rng);
+        vector<int> perm(n);
 
-    for (auto i : perm) {
-        cout << i << " ";
+        iota(perm.begin(), perm.end(), 1);
+        shuffle(perm.begin(), perm.end(), rng);
+
+        for (auto i : perm) {
+            s += (to_string(i) + " ");
+        }
+
+        s += nl;
+        count += n;
     }
-
-    cout << nl;
+    cout << count << nl << s;
     return;
 }
 
 void tree()
 {
-    uniform_int_distribution<int> tt(1, 5);
-    int n = 5 + tt(rng);
+    uniform_int_distribution<int> tt(1, 2e5);
+    int n = tt(rng);
 
     vector<int> prufer(n - 2);
     uniform_int_distribution<int> dist(1, n);
@@ -149,14 +170,15 @@ void tree()
 
 void tree_basic()
 {
-    uniform_int_distribution<int> tt(0, e5);
+    uniform_int_distribution<int> tt(0, 2e5);
 
-    int n = e5 + tt(rng);
+    int n = tt(rng);
     cout << n << nl;
 
     vector<pair<int, int>> vec;
 
     uniform_int_distribution<int> b(0, 1);
+
     for (int i = 2; i <= n; i++) {
         int par = uniform_int_distribution<int>(1, i - 1)(rng);
 
@@ -180,9 +202,9 @@ void tree_basic()
 
 void custom()
 {
-    uniform_int_distribution<int> tt(0, e5);
+    uniform_int_distribution<int> tt(0, 2e5);
 
-    int n = e5 + tt(rng);
+    int n = tt(rng);
     cout << n << nl;
 
     vector<int> arr;
@@ -193,18 +215,12 @@ int main()
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
 
-    int t = 1;
-    cout << t << nl;
-
-    for (int tt = 0; tt < t; tt++) {
-
-        // normal();
-        // normal_n();
-        // single_n();
-        // perm();
-        // tree();
-        // custom();
-    }
+    // normal();
+    // normal_n();
+    // single_n();
+    // perm();
+    // tree();
+    // custom();
 
     return 0;
 }

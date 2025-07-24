@@ -1,7 +1,7 @@
 #include "bits/stdc++.h"
 using namespace std;
 
-#ifdef PIKA
+#ifdef GRACIE
 #include "/Users/piyushkeshan/Documents/cpp_template_library/template/dbg.cpp"
 #else
 #define dbg(...)
@@ -13,7 +13,7 @@ typedef int64_t ll;
 const ll inf = ll(4e18) + 5;
 const char nl = '\n';
 
-void evermore()
+void mess_it_up()
 {
     int n;
     cin >> n;
@@ -31,15 +31,15 @@ signed main()
 {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
-#ifdef PIKA
-    auto album_start_time = std::chrono::high_resolution_clock::now();
+#ifdef GRACIE
+    auto i_knew_it_i_knew_you = std::chrono::high_resolution_clock::now();
 #endif
-    int number_of_albums = 1;
-    cin >> number_of_albums;
-    for (int number_of_song = 1; number_of_song <= number_of_albums; number_of_song++) {
-        evermore();
-        dbg(number_of_song);
+    int let_it_happen = 1;
+    cin >> let_it_happen;
+    for (int cool = 1; cool <= let_it_happen; cool++) {
+        dbg(cool);
+        mess_it_up();
     }
-    dbg(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - album_start_time).count() * 1e-9);
+    dbg(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - i_knew_it_i_knew_you).count() * 1e-9);
     return 0;
 }

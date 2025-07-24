@@ -3,4 +3,4 @@
 - - be able to process input as well as output by the code
 - - (check if prime can just be done using factorizer)
 
-- add show total time to template
+~- (done) add show total time to template~
