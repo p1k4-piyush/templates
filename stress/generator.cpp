@@ -1,12 +1,8 @@
-
-//	https://github.com/p1k4-piyush/templates/
-
 #include "bits/stdc++.h"
-#include <string>
 
 using namespace std;
 
-#ifdef PIKA
+#ifdef GRACIE
 #include "/Users/piyushkeshan/Documents/cpp_template_library/template/dbg.cpp"
 #else
 #define dbg(...)
@@ -22,14 +18,16 @@ mt19937_64 rng((unsigned int)chrono::steady_clock::now().time_since_epoch().coun
 
 void normal()
 {
-    uniform_int_distribution<int> tt(0, 2e5);
+    int k = 1e5;
+    uniform_int_distribution<int> tt(0, k);
     uniform_int_distribution<int> dist(1, 1e9);
 
     string s;
     int count = 0;
 
-    while (count < 2e5) {
+    while (count < k) {
         int n = tt(rng);
+        count += n;
         s += (to_string(n) + nl);
 
         while (n--) {
@@ -37,7 +35,6 @@ void normal()
         }
 
         s += nl;
-        count += n;
     }
     cout << count << nl << s;
     return;
@@ -45,13 +42,15 @@ void normal()
 
 void normal_n()
 {
-    uniform_int_distribution<int> tt(0, 2e5);
+    int k = 1e5;
+    uniform_int_distribution<int> tt(0, k);
 
     string s;
     int count = 0;
 
-    while (count < 2e5) {
+    while (count < k) {
         int n = tt(rng);
+        count += n;
         s += (to_string(n) + nl);
 
         uniform_int_distribution<int> dist(1, n);
@@ -61,7 +60,6 @@ void normal_n()
         }
 
         s += nl;
-        count += n;
     }
     cout << count << nl << s;
     return;
@@ -70,8 +68,9 @@ void normal_n()
 void single_n()
 {
     uniform_int_distribution<ll> tt(1, ll(1e18));
-    cout << "1000" << nl;
-    for (int i = 0; i < 1000; i++) {
+    int t = 1000;
+    cout << t << nl;
+    for (int i = 0; i < t; i++) {
         cout << tt(rng) << nl;
     }
 
@@ -80,18 +79,20 @@ void single_n()
 
 void perm()
 {
-    uniform_int_distribution<int> tt(0, 2e5);
+    int k = 1e5;
+    uniform_int_distribution<int> tt(0, k);
 
     string s;
     int count = 0;
 
-    while (count < 2e5) {
+    while (count < k) {
         int n = tt(rng);
+        count += n;
         s += (to_string(n) + nl);
 
         vector<int> perm(n);
 
-        iota(perm.begin(), perm.end(), 1);
+        iota(perm.begin(), perm.end(), 1); // change to 0 for 0,1,...,n-1
         shuffle(perm.begin(), perm.end(), rng);
 
         for (auto i : perm) {
@@ -99,7 +100,6 @@ void perm()
         }
 
         s += nl;
-        count += n;
     }
     cout << count << nl << s;
     return;
@@ -107,7 +107,7 @@ void perm()
 
 void tree()
 {
-    uniform_int_distribution<int> tt(1, 2e5);
+    uniform_int_distribution<int> tt(1, 1e5);
     int n = tt(rng);
 
     vector<int> prufer(n - 2);
@@ -170,7 +170,7 @@ void tree()
 
 void tree_basic()
 {
-    uniform_int_distribution<int> tt(0, 2e5);
+    uniform_int_distribution<int> tt(0, 1e5);
 
     int n = tt(rng);
     cout << n << nl;
@@ -214,13 +214,11 @@ int main()
 {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
-
     // normal();
     // normal_n();
     // single_n();
     // perm();
     // tree();
     // custom();
-
     return 0;
 }

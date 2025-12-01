@@ -12,55 +12,20 @@
 #include <type_traits>
 #include <variant>
 
-#include <cstdlib>
-#include <fstream>
-#include <map>
-#include <mutex>
-#include <sstream>
-
+// clang-format off
 namespace _dbglib {
-enum { BLACK = 0,
-    RED,
-    GREEN,
-    YELLOW,
-    BLUE,
-    MAGENTA,
-    CYAN,
-    WHITE,
-    BRIGHT = 8,
-    BG = 16,
-    RESET = 24 };
+enum {BLACK = 0, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, BRIGHT = 8, BG = 16, RESET = 24};
 
-static constexpr char const* escape_codes[] {
-    "\x1b[30m",
-    "\x1b[31m",
-    "\x1b[32m",
-    "\x1b[33m",
-    "\x1b[34m",
-    "\x1b[35m",
-    "\x1b[36m",
-    "\x1b[37m",
-    "\x1b[30;1m",
-    "\x1b[31;1m",
-    "\x1b[32;1m",
-    "\x1b[33;1m",
-    "\x1b[34;1m",
-    "\x1b[35;1m",
-    "\x1b[36;1m",
-    "\x1b[37;1m",
-    "\x1b[40;1m",
-    "\x1b[41;1m",
-    "\x1b[42;1m",
-    "\x1b[43;1m",
-    "\x1b[44;1m",
-    "\x1b[45;1m",
-    "\x1b[46;1m",
-    "\x1b[47;1m",
-    "\x1b[0m",
+static constexpr char const* escape_codes[]{
+	"\x1b[30m",   "\x1b[31m",   "\x1b[32m",   "\x1b[33m",   "\x1b[34m",   "\x1b[35m",   "\x1b[36m",
+	"\x1b[37m",   "\x1b[30;1m", "\x1b[31;1m", "\x1b[32;1m", "\x1b[33;1m", "\x1b[34;1m", "\x1b[35;1m",
+	"\x1b[36;1m", "\x1b[37;1m", "\x1b[40;1m", "\x1b[41;1m", "\x1b[42;1m", "\x1b[43;1m", "\x1b[44;1m",
+	"\x1b[45;1m", "\x1b[46;1m", "\x1b[47;1m", "\x1b[0m",
 };
 
 constexpr auto ansi_escape_code(int style = RESET) { return escape_codes[style]; }
 #define S(...) (styled ? ansi_escape_code(__VA_ARGS__) : "")
+// clang-format on
 
 template <class T>
 constexpr bool is_string = std::is_same_v<T, std::string> or std::is_same_v<T, std::string_view> or std::is_same_v<std::decay_t<T>, char*> or std::is_same_v<std::decay_t<T>, const char*>;
@@ -193,110 +158,6 @@ void dbg_pretty_impl(std::ostream& os, auto const& x, bool styled = true, int d 
     }
 }
 
-// ---------- Graphviz helpers (paste here) ----------
-static std::map<int, int> _dbg_graph_counters;
-static std::mutex _dbg_graph_mutex;
-
-inline std::string _dbg_make_png_name(int line, int count)
-{
-    std::ostringstream ss;
-    ss << "out_" << line << '_' << count << ".png";
-    return ss.str();
-}
-inline std::string _dbg_make_dot_name(int line, int count)
-{
-    std::ostringstream ss;
-    ss << "out_" << line << '_' << count << ".dot";
-    return ss.str();
-}
-
-inline std::string save_graph_and_open(int line, std::string const& gv)
-{
-    std::lock_guard<std::mutex> guard(_dbg_graph_mutex);
-    int cnt = ++_dbg_graph_counters[line];
-    auto dotname = _dbg_make_dot_name(line, cnt);
-    auto pngname = _dbg_make_png_name(line, cnt);
-
-    {
-        std::ofstream ofs(dotname, std::ios::binary);
-        ofs << gv;
-    }
-
-    std::string cmd = "neato -Tpng " + dotname + " -o " + pngname + "; open " + pngname + "";
-    std::system(cmd.c_str());
-    return pngname;
-}
-
-template <typename U>
-void debug_print_with_graph(std::ostream& os, int line, U const& v, bool styled, int d = 0)
-{
-    if constexpr (requires { v.graphviz(); }) {
-        using R = decltype(v.graphviz());
-        std::string s;
-        if constexpr (std::is_convertible_v<R, std::string>) {
-            s = v.graphviz();
-        } else if constexpr (std::is_convertible_v<R, std::string_view>) {
-            s = std::string(v.graphviz());
-        } else if constexpr (std::is_convertible_v<R, const char*>) {
-            s = std::string(v.graphviz());
-        } else {
-            std::ostringstream tmp;
-            tmp << v.graphviz();
-            s = tmp.str();
-        }
-        auto png = save_graph_and_open(line, s);
-        os << S(GREEN) << "<graphviz:" << png << ">" << S();
-        return;
-    }
-
-    auto ci_contains = [](std::string_view hay, std::string_view needle) {
-        if (needle.empty())
-            return true;
-        std::string h(hay);
-        std::string n(needle);
-        std::transform(h.begin(), h.end(), h.begin(), [](unsigned char c) { return std::tolower(c); });
-        std::transform(n.begin(), n.end(), n.begin(), [](unsigned char c) { return std::tolower(c); });
-        return h.find(n) != std::string::npos;
-    };
-
-    auto looks_like_dot = [&](std::string_view s) {
-        if (s.empty())
-            return false;
-        // common DOT signatures
-        if (ci_contains(s, "digraph"))
-            return true;
-        if (ci_contains(s, "graph"))
-            return true;
-        if (s.find("->") != std::string::npos)
-            return true;
-        if (s.find("--") != std::string::npos)
-            return true;
-        if (s.find('{') != std::string::npos && s.find('}') != std::string::npos)
-            return true;
-        if (ci_contains(s, "strict"))
-            return true;
-        // otherwise not DOT-like
-        return false;
-    };
-
-    if constexpr (requires { std::declval<std::ostream&>() << std::declval<U const&>(); }) {
-        std::ostringstream ss;
-        ss << v;
-        auto s = ss.str();
-
-        if (looks_like_dot(s)) {
-            auto png = save_graph_and_open(line, s);
-            os << S(GREEN) << "<graphviz:" << png << ">" << S();
-        } else {
-            dbg_pretty_impl(os, v, styled, d);
-        }
-        return;
-    }
-
-    dbg_pretty_impl(os, v, styled, d);
-}
-// ---------- end Graphviz helpers ----------
-
 constexpr int scan_expr(char const* exprs)
 {
     auto i = 0;
@@ -343,8 +204,7 @@ void dbg_repr(char const* repr, std::source_location loc, bool styled, auto cons
         };
         ((loc_info(),
              os << ' ' << S(YELLOW) << pop_expr() << S() << " = ",
-             // <-- use graph-aware print wrapper here:
-             debug_print_with_graph(os, loc.line(), xs, styled),
+             dbg_pretty_impl(os, xs, styled),
              os << '\n'),
             ...);
     } else {
@@ -357,10 +217,8 @@ void dbg_repr_line(char const* repr, std::source_location loc, bool styled, auto
     auto& os = std::cerr;
     os << S(WHITE | BG) << S(BLACK) << '[' << std::setw(3) << loc.line() << ']' << S();
     os << ' ' << S(YELLOW) << repr << S() << " = ";
-    // first element via graph-aware helper
-    debug_print_with_graph(os, loc.line(), x, styled);
-    // remaining elements separated by '|'
-    ((os << ' ' << S(WHITE | BG) << S(BLACK) << '|' << S() << ' ', debug_print_with_graph(os, loc.line(), xs, styled)), ...),
+    dbg_pretty_impl(os, x, styled),
+        ((os << ' ' << S(WHITE | BG) << S(BLACK) << '|' << S() << ' ', dbg_pretty_impl(os, xs, styled)), ...),
         os << '\n';
 }
 #undef S

@@ -22,6 +22,8 @@ public:
         return id;
     }
 
+    bool directed() const { return true; }
+
     digraph<T> reverse() const
     {
         digraph<T> rev(n);

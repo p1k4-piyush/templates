@@ -120,16 +120,16 @@ int main(int argc, char* argv[])
         }
 
         if (bruteOutput != solOutput) {
-            // cout << "Test case " << i << " failed." << endl;
+            cout << "Test case " << i << " failed." << endl;
 
-            // cout << "Input:" << endl;
-            // cout << inputContent << endl;
+            cout << "Input:" << endl;
+            cout << inputContent << endl;
 
-            // cout << "Brute-force output:" << endl;
-            // cout << bruteOutput << endl;
+            cout << "Brute-force output:" << endl;
+            cout << bruteOutput << endl;
 
-            // cout << "Optimized solution output:" << endl;
-            // cout << solOutput << endl;
+            cout << "Optimized solution output:" << endl;
+            cout << solOutput << endl;
 
             cout << "Incorrect solution" << endl;
             return 0;
@@ -149,12 +149,12 @@ int main(int argc, char* argv[])
 
     cout << "----------------------------------------" << endl;
     cout << "Maximum optimized solution time was " << maxSolTime << " seconds" << endl;
-    // cout << "Occurred at test case " << maxTestCaseNumber << " with input:" << endl;
-    // cout << maxTestInput << endl;
-    // cout << "Brute-force output:" << endl;
-    // cout << maxBruteOutput << endl;
-    // cout << "Optimized solution output:" << endl;
-    // cout << maxSolOutput << endl;
+    cout << "Occurred at test case " << maxTestCaseNumber << " with input:" << endl;
+    cout << maxTestInput << endl;
+    cout << "Brute-force output:" << endl;
+    cout << maxBruteOutput << endl;
+    cout << "Optimized solution output:" << endl;
+    cout << maxSolOutput << endl;
     {
         ofstream inFile("input.txt");
         if (inFile.is_open()) {
