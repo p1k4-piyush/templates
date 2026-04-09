@@ -67,3 +67,5 @@ tourist/
 test/
 
 guide.md
+
+.gitignore
