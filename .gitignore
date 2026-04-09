@@ -65,3 +65,5 @@ out_*.png
 old/
 tourist/
 test/
+
+guide.md
