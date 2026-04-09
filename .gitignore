@@ -62,3 +62,5 @@ out_*.png
 
 # Temporary Scratch Folders
 .tmp/
+old/
+tourist/
