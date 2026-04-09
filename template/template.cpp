@@ -2,7 +2,7 @@
 using namespace std;
 
 #ifdef GRACIE
-#include "/Users/piyushkeshan/Documents/cpp_template_library/template/dbg.cpp"
+#include "/Users/piyushkeshan/Documents/cpp_template_library/template/dbg.hpp"
 #else
 #define dbg(...)
 #endif

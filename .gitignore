@@ -64,3 +64,4 @@ out_*.png
 .tmp/
 old/
 tourist/
+test/
