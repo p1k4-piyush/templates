@@ -1,4 +1,6 @@
 - add to stress testing setup a way to use a validator:
 - - check if given output is a permutation
 - - be able to process input as well as output by the code
-- - check if prime (can be done using factorizer)
+- - (check if prime can just be done using factorizer)
+
+~- (done) add show total time to template~

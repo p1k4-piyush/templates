@@ -1,0 +1,2 @@
+namespace seg_tree {
+
