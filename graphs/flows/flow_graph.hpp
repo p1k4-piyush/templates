@@ -1,6 +1,3 @@
-
-using namespace std;
-
 template <typename T>
 class flow_graph {
  public:
@@ -33,7 +30,7 @@ class flow_graph {
     flow = 0;
   }
    
-  int add(int from, int to, T forward_cap, T backward_cap = 0) {
+  int add(int from, int to, T forward_cap, T backward_cap) {
     assert(0 <= from && from < n && 0 <= to && to < n);
     int id = (int) edges.size();
     g[from].push_back(id);
@@ -44,9 +41,43 @@ class flow_graph {
   }
 
 #ifdef GRACIE
-  std::string graphviz() const {
-    std::ostringstream os;
-    os << "digraph G {\n";
-    os << "  node [shape=circle, fontname=\"Courier\"];\n";
+  std::string graphviz(const std::vector<int>& mincut = {}, bool simplify = true) const {
+    std::ostringstream out;
+    out << "digraph G {\n";
+    out << "  rankdir=LR;\n";
+    out << "  node [shape=circle];\n";
     
-    
+    std::vector<bool> in_cut(n, false);
+    for(int v : mincut) in_cut[v] = true;
+
+    for (int i = 0; i < n; i++) {
+        out << "  " << i << " [label=\"" << i << "\"";
+        if (i == st) out << ", style=filled, fillcolor=lightgreen";
+        else if (i == fin) out << ", style=filled, fillcolor=lightcoral";
+        else if (in_cut[i]) out << ", style=filled, fillcolor=yellow";
+        out << "];\n";
+    }
+
+    for (int id = 0; id < (int)edges.size(); id += 2) {
+        const auto& e = edges[id];
+        const auto& back = edges[id ^ 1];
+        if (simplify && e.c == 0 && back.c == 0) continue; 
+        
+        bool is_cut = in_cut[e.from] && !in_cut[e.to] && e.c > 0;
+        out << "  " << e.from << " -> " << e.to << " [label=\"" << e.f << " / " << e.c << "\"";
+        if (e.f > 0) out << ", color=blue, penwidth=2";
+        if (is_cut) out << ", color=red, style=dashed, penwidth=2";
+        out << "];\n";
+        
+        if (!simplify || back.c > 0) {
+            out << "  " << back.from << " -> " << back.to << " [label=\"" << back.f << " / " << back.c << "\", style=dotted];\n";
+        }
+    }
+    out << "}\n";
+    return out.str();
+  }
+  friend std::ostream& operator<<(std::ostream& os, const flow_graph& fg) {
+      return os << "[FlowGraph n=" << fg.n << " st=" << fg.st << " fin=" << fg.fin << "]";
+  }
+#endif
+};

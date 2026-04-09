@@ -1,3 +1,6 @@
+
+//  https://github.com/the-tourist/algo/blob/master/segtree/tag.cpp
+
 struct Tag {
     int add;
 
@@ -30,11 +33,8 @@ struct Tag {
     }
 
 #ifdef GRACIE
-    std::string print() const
-    {
-        std::ostringstream os;
-        _dbglib::dbg_impl(os, add, false);
-        return os.str();
+    friend std::ostream& operator<<(std::ostream& os, const Tag& t) {
+        return os << t.add;
     }
 #endif
 };

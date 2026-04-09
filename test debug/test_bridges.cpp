@@ -8,15 +8,15 @@ using namespace std;
 #include "../graphs/bridges.hpp"
 
 int main() {
-    dfs_undigraph<int> g(100);
+    dfs_undigraph<int> g(15);
     mt19937 rng(1337);
-    for (int i = 1; i < 100; i++) {
+    for (int i = 1; i < 15; i++) {
         uniform_int_distribution<int> unif(0, i - 1);
         g.add(i, unif(rng));
     }
     // Add extra random edges to create cycles (so not everything is a bridge)
-    for (int i = 0; i < 20; i++) {
-        uniform_int_distribution<int> unif(0, 99);
+    for (int i = 0; i < 5; i++) {
+        uniform_int_distribution<int> unif(0, 14);
         int u = unif(rng), v = unif(rng);
         if (u != v) g.add(u, v);
     }

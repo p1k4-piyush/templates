@@ -1,6 +1,3 @@
-
-using namespace std;
-
 template <typename T>
 class flow_decomposition {
  public:
@@ -108,8 +105,42 @@ class flow_decomposition {
 
 #ifdef GRACIE
   std::string graphviz() const {
-    std::ostringstream os;
-    os << "digraph G {\n";
-    os << "  node [shape=circle, fontname=\"Courier\"];\n";
-    
-    
+    std::ostringstream out;
+    out << "digraph G {\n";
+    out << "  rankdir=LR;\n";
+    out << "  node [shape=circle];\n";
+    for (int i = 0; i < g.n; i++) {
+      out << "  " << i << " [label=\"" << i << "\"";
+      if (i == g.st) out << ", style=filled, fillcolor=lightgreen";
+      else if (i == g.fin) out << ", style=filled, fillcolor=lightcoral";
+      out << "];\n";
+    }
+
+    std::vector<std::string> colors = {"blue", "red", "darkgreen", "purple", "orange", "brown", "deeppink"};
+    int color_idx = 0;
+
+    for (size_t i = 0; i < paths.size(); i++) {
+      std::string c = colors[color_idx++ % colors.size()];
+      for (int id : paths[i]) {
+        const auto& e = g.edges[id];
+        out << "  " << e.from << " -> " << e.to 
+            << " [label=\"P" << i << ": " << path_flows[i] << "\", color=" << c << ", fontcolor=" << c << "];\n";
+      }
+    }
+
+    for (size_t i = 0; i < cycles.size(); i++) {
+      std::string c = colors[color_idx++ % colors.size()];
+      for (int id : cycles[i]) {
+        const auto& e = g.edges[id];
+        out << "  " << e.from << " -> " << e.to 
+            << " [label=\"C" << i << ": " << cycle_flows[i] << "\", color=" << c << ", fontcolor=" << c << ", style=dashed];\n";
+      }
+    }
+    out << "}\n";
+    return out.str();
+  }
+  friend std::ostream& operator<<(std::ostream& os, const flow_decomposition& fd) {
+      return os << "[Flow Decomposition Paths: " << fd.paths.size() << ", Cycles: " << fd.cycles.size() << "]";
+  }
+#endif
+};

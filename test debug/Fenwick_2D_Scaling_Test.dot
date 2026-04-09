@@ -1,0 +1,24 @@
+digraph G {
+  layout=dot;
+  node [shape=plaintext, fontsize=10];
+  st [label=<
+    <table border="0" cellborder="1" cellspacing="0">
+      <tr><td bgcolor="#eeeeee"><b>(x \\ y)</b></td><td bgcolor="#eeeeee"><b>0</b></td><td bgcolor="#eeeeee"><b>1</b></td><td bgcolor="#eeeeee"><b>2</b></td><td bgcolor="#eeeeee"><b>3</b></td><td bgcolor="#eeeeee"><b>4</b></td><td bgcolor="#eeeeee"><b>5</b></td><td bgcolor="#eeeeee"><b>6</b></td><td bgcolor="#eeeeee"><b>7</b></td><td bgcolor="#eeeeee"><b>8</b></td><td bgcolor="#eeeeee"><b>9</b></td><td bgcolor="#eeeeee"><b>10</b></td><td bgcolor="#eeeeee"><b>11</b></td><td bgcolor="#eeeeee"><b>12</b></td><td bgcolor="#eeeeee"><b>13</b></td><td bgcolor="#eeeeee"><b>14</b></td></tr>
+      <tr><td bgcolor="#eeeeee"><b>0</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>59</td><td>59</td><td>0</td><td>0</td><td>0</td></tr>
+      <tr><td bgcolor="#eeeeee"><b>1</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>59</td><td>59</td><td>0</td><td>0</td><td>0</td></tr>
+      <tr><td bgcolor="#eeeeee"><b>2</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>55</td><td>0</td><td>0</td><td>0</td></tr>
+      <tr><td bgcolor="#eeeeee"><b>3</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>3</td><td>3</td><td>59</td><td>117</td><td>0</td><td>0</td><td>0</td></tr>
+      <tr><td bgcolor="#eeeeee"><b>4</b></td><td>0</td><td>0</td><td>7</td><td>7</td><td>0</td><td>0</td><td>0</td><td>7</td><td>39</td><td>39</td><td>0</td><td>39</td><td>0</td><td>0</td><td>0</td></tr>
+      <tr><td bgcolor="#eeeeee"><b>5</b></td><td>0</td><td>64</td><td>7</td><td>71</td><td>2</td><td>2</td><td>0</td><td>73</td><td>39</td><td>39</td><td>0</td><td>39</td><td>0</td><td>0</td><td>0</td></tr>
+      <tr><td bgcolor="#eeeeee"><b>6</b></td><td>0</td><td>0</td><td>0</td><td>93</td><td>0</td><td>0</td><td>0</td><td>93</td><td>0</td><td>0</td><td>75</td><td>75</td><td>0</td><td>0</td><td>0</td></tr>
+      <tr><td bgcolor="#eeeeee"><b>7</b></td><td>0</td><td>64</td><td>7</td><td>164</td><td>102</td><td>102</td><td>0</td><td>269</td><td>42</td><td>42</td><td>134</td><td>261</td><td>0</td><td>0</td><td>0</td></tr>
+      <tr><td bgcolor="#eeeeee"><b>8</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+      <tr><td bgcolor="#eeeeee"><b>9</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+      <tr><td bgcolor="#eeeeee"><b>10</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+      <tr><td bgcolor="#eeeeee"><b>11</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>33</td><td>33</td><td>0</td><td>33</td><td>0</td><td>22</td><td>0</td><td>22</td><td>0</td><td>0</td><td>62</td></tr>
+      <tr><td bgcolor="#eeeeee"><b>12</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>83</td><td>83</td><td>0</td><td>83</td><td>0</td><td>0</td><td>0</td><td>89</td><td>0</td><td>0</td><td>0</td></tr>
+      <tr><td bgcolor="#eeeeee"><b>13</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>83</td><td>83</td><td>0</td><td>83</td><td>0</td><td>0</td><td>0</td><td>89</td><td>0</td><td>0</td><td>62</td></tr>
+      <tr><td bgcolor="#eeeeee"><b>14</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>92</td><td>72</td><td>164</td><td>0</td><td>0</td><td>0</td></tr>
+    </table>
+  >];
+}

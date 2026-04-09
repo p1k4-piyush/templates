@@ -1,6 +1,4 @@
 
-using namespace std;
-
 template <typename T, typename C>
 class MCMF {
  public:
@@ -19,6 +17,52 @@ class MCMF {
   vector<edge> edges;
   vector<C> d;
   vector<C> pot;
+/* OLD:
+  __gnu_pbds::priority_queue<pair<C, int>> q;
+  vector<typename decltype(q)::point_iterator> its;
+  vector<int> pe;
+  const C INF_C = numeric_limits<C>::max() / 2;
+
+  explicit MCMF(int n_) : n(n_), g(n), d(n), pot(n, 0), its(n), pe(n) {}
+
+  int add(int from, int to, T forward_cap, T backward_cap, C edge_cost) {
+    assert(0 <= from && from < n && 0 <= to && to < n);
+    assert(forward_cap >= 0 && backward_cap >= 0);
+    int id = static_cast<int>(edges.size());
+    g[from].push_back(id);
+    edges.push_back({from, to, forward_cap, 0, edge_cost});
+    g[to].push_back(id + 1);
+    edges.push_back({to, from, backward_cap, 0, -edge_cost});
+    return id;
+  }
+
+  void expath(int st) {
+    fill(d.begin(), d.end(), INF_C);
+    q.clear();
+    fill(its.begin(), its.end(), q.end());
+    its[st] = q.push({pot[st], st});
+    d[st] = 0;
+    while (!q.empty()) {
+      int i = q.top().second;
+      q.pop();
+      its[i] = q.end();
+      for (int id : g[i]) {
+        const edge &e = edges[id];
+        int j = e.to;
+        if (e.c - e.f > eps && d[i] + e.cost < d[j]) {
+          d[j] = d[i] + e.cost;
+          pe[j] = id;
+          if (its[j] == q.end()) {
+            its[j] = q.push({pot[j] - d[j], j});
+          } else {
+            q.modify(its[j], {pot[j] - d[j], j});
+          }
+        }
+      }
+    }
+    swap(d, pot);
+  }
+*/
   std::priority_queue<pair<C, int>, vector<pair<C, int>>, greater<pair<C, int>>> q;
   vector<int> pe;
   const C INF_C = numeric_limits<C>::max() / 2;
@@ -26,8 +70,6 @@ class MCMF {
   explicit MCMF(int n_) : n(n_), g(n), d(n), pot(n, 0), pe(n) {}
 
   int add(int from, int to, T forward_cap, T backward_cap, C edge_cost) {
-    assert(0 <= from && from < n && 0 <= to && to < n);
-    assert(forward_cap >= 0 && backward_cap >= 0);
     int id = static_cast<int>(edges.size());
     g[from].push_back(id);
     edges.push_back({from, to, forward_cap, 0, edge_cost});
@@ -58,6 +100,45 @@ class MCMF {
     swap(d, pot);
   }
    
+#ifdef GRACIE
+  std::string graphviz(bool simplify = true) const {
+    std::ostringstream out;
+    out << "digraph G {\n";
+    out << "  rankdir=LR;\n";
+    out << "  node [shape=circle];\n";
+    for (int i = 0; i < n; i++) {
+    out << "  " << i << " [label=\"" << i << " (pot=" << pot[i] << ")\"";
+    if (i == n - 1) out << ", style=filled, fillcolor=lightcoral";
+    else if (i == 0) out << ", style=filled, fillcolor=lightgreen";
+    out << "];\n";
+    }
+    for (int id = 0; id < (int)edges.size(); id += 2) {
+    const auto& e = edges[id];
+    const auto& back = edges[id ^ 1];
+    if (simplify && e.c == 0 && back.c == 0) continue;
+    std::ostringstream main_lbl;
+    main_lbl << "f=" << e.f << "/" << e.c;
+    if (e.cost != 1) main_lbl << " @ " << e.cost;
+    
+    out << "  " << e.from << " -> " << e.to 
+        << " [label=\"" << main_lbl.str() << "\"";
+    if (e.f > 0) out << ", color=blue, penwidth=2";
+    out << "];\n";
+    if (!simplify || back.c > 0) {
+        std::ostringstream back_lbl;
+        back_lbl << "f=" << back.f << "/" << back.c;
+        if (back.cost != 1) back_lbl << " @ " << back.cost;
+        out << "  " << back.from << " -> " << back.to 
+            << " [label=\"" << back_lbl.str() << "\", style=dotted];\n";
+    }
+    }
+    out << "}\n";
+    return out.str();
+  }
+  friend std::ostream& operator<<(std::ostream& os, const MCMF& m) {
+      return os << "[MCMF Layer Network]";
+  }
+#endif
   pair<T, C> max_flow_min_cost(int st, int fin) {
     T flow = 0;
     C cost = 0;
@@ -156,43 +237,4 @@ class MCMF {
     }
     return {flow, cost};
   }
-
-#ifdef GRACIE
-  std::string graphviz() const {
-    std::ostringstream os;
-    os << "digraph G {\n";
-    os << "  node [shape=circle, fontname=\"Courier\"];\n";
-    
-    for (int i = 0; i < n; i++) {
-       os << "  " << i << " [label=\"" << i << "\"];\n";
-    }
-
-    for (int i = 0; i < (int)edges.size(); i += 2) {
-       const auto& e = edges[i];
-       const auto& rev = edges[i ^ 1];
-       if (e.c > eps || e.f > eps || rev.f > eps) {
-          T current_f = e.f - rev.f;
-          if (current_f > eps || current_f < -eps || e.c > eps) {
-              os << "  " << e.from << " -> " << e.to 
-                 << " [label=\"" << (current_f > 0 ? current_f : 0) << " / " << e.c << " @ " << e.cost << "\"";
-              
-              if (current_f > eps) {
-                  os << ", color=\"blue\", penwidth=2.5, fontcolor=\"blue\"";
-              } else if (current_f < -eps) {
-                  os << "];\n";
-                  os << "  " << e.to << " -> " << e.from 
-                     << " [label=\"" << -current_f << " / " << rev.c << " @ " << rev.cost << "\"";
-                  os << ", color=\"blue\", penwidth=2.5, fontcolor=\"blue\"";
-                  continue;
-              } else {
-                  os << ", color=\"gray50\", fontcolor=\"gray50\"";
-              }
-              os << "];\n";
-          }
-       }
-    }
-    os << "}\n";
-    return os.str();
-  }
-#endif
 };

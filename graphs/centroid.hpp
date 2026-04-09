@@ -16,7 +16,7 @@ struct centroid_result : public std::vector<int> {
            }
         }
         for (auto const& e : g_ptr->edges) {
-           os << "  " << e.from << " -> " << e.to << " [style=dotted, color=gray, dir=none];\n";
+           os << "  " << e.from << " -> " << e.to << " [style=dotted, color=gray, dir=none, constraint=false];\n";
         }
         os << "}\n";
         return os.str();

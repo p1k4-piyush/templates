@@ -1,6 +1,3 @@
-
-using namespace std;
-
 template <typename T>
 class hungarian {
  public:
@@ -75,49 +72,47 @@ class hungarian {
     return -v[m];
   }
 
+#ifdef GRACIE
+  std::string graphviz() const {
+    std::ostringstream out;
+    out << "graph G {\n";
+    out << "  rankdir=LR;\n";
+    out << "  node [shape=circle];\n";
+    out << "  subgraph cluster_L {\n";
+    out << "    label=\"Left (1..n)\";\n";
+    for (int i = 0; i < n; i++) out << "    L" << i << " [label=\"L" << i << " (u=" << u[i] << ")\"];\n";
+    out << "  }\n";
+    out << "  subgraph cluster_R {\n";
+    out << "    label=\"Right (1..m)\";\n";
+    for (int j = 0; j < m; j++) out << "    R" << j << " [label=\"R" << j << " (v=" << v[j] << ")\"];\n";
+    out << "  }\n";
+    for (int i = 0; i < n; i++) {
+      for (int j = 0; j < m; j++) {
+        out << "  L" << i << " -- R" << j;
+        std::ostringstream opts;
+        if (a[i][j] != 1) opts << "label=\"" << a[i][j] << "\"";
+        if (pa[i] == j) {
+            if (opts.str().length() > 0) opts << ", ";
+            opts << "color=red, penwidth=2";
+        } else {
+            if (opts.str().length() > 0) opts << ", ";
+            opts << "style=dotted, color=gray";
+        }
+        if (opts.str().length() > 0) out << " [" << opts.str() << "]";
+        out << ";\n";
+      }
+    }
+    out << "}\n";
+    return out.str();
+  }
+  friend std::ostream& operator<<(std::ostream& os, const hungarian& h) {
+      return os << "Current score: " << -h.v[h.m];
+  }
+#endif
   inline T solve() {
     for (int i = 0; i < n; i++) {
       add_row(i);
     }
     return current_score();
   }
-
-#ifdef GRACIE
-  std::string graphviz() const {
-    std::ostringstream os;
-    os << "digraph G {\n";
-    os << "  rankdir=LR;\n";
-    os << "  node [shape=circle, fontname=\"Courier\"];\n";
-    
-    os << "  subgraph cluster_L {\n";
-    os << "    style=invis;\n";
-    for (int i = 0; i < n; i++) {
-        os << "    L" << i << " [label=\"L" << i << "\"];\n";
-    }
-    os << "  }\n";
-
-    os << "  subgraph cluster_R {\n";
-    os << "    style=invis;\n";
-    for (int j = 0; j < m; j++) {
-        os << "    R" << j << " [label=\"R" << j << "\"];\n";
-    }
-    os << "  }\n";
-
-    for (int i = 0; i < n; ++i) {
-      for (int j = 0; j < m; ++j) {
-        if (a[i][j] < inf / 2) { 
-          os << "  L" << i << " -> R" << j << " [label=\"" << a[i][j] << "\"";
-          if (pa[i] == j) {
-             os << ", color=\"red\", penwidth=2.5, fontcolor=\"red\"";
-          } else {
-             os << ", color=\"gray80\", fontcolor=\"gray80\"";
-          }
-          os << "];\n";
-        }
-      }
-    }
-    os << "}\n";
-    return os.str();
-  }
-#endif
 };

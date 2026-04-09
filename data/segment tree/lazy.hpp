@@ -1,3 +1,6 @@
+
+//  https://github.com/the-tourist/algo/blob/master/segtree/lazy.cpp
+
 template <typename Info, typename Tag>
 class LazySegmentTree {
 public:
@@ -156,60 +159,29 @@ public:
 
 #ifdef GRACIE
     std::string graphviz() const {
-        std::ostringstream os;
-        os << "digraph G {\n";
-        os << "  node [shape=plaintext, fontname=\"Courier\"];\n";
-        
-        auto encode_html = [](std::string s) {
-            std::string res;
-            for (char c : s) {
-                if (c == '<') res += "&lt;";
-                else if (c == '>') res += "&gt;";
-                else if (c == '&') res += "&amp;";
-                else if (c == '"') res += "&quot;";
-                else if (c == '\'') res += "&#39;";
-                else if (c == '\n') res += "<br/>";
-                else res += c;
-            }
-            return res;
-        };
-
-        auto get_string = [](auto const& x) {
-            if constexpr (requires { x.print(); }) {
-                std::ostringstream ss; ss << x.print(); return ss.str();
-            } else if constexpr (requires { x.to_string(); }) {
-                std::ostringstream ss; ss << x.to_string(); return ss.str();
-            } else if constexpr (requires { std::declval<std::ostream&>() << x; }) {
-                std::ostringstream ss; ss << x; return ss.str();
-            } else {
-                std::ostringstream ss;
-                _dbglib::dbg_impl(ss, x, false);
-                return ss.str();
-            }
-        };
-
+        std::ostringstream out;
+        out << "digraph G {\n";
+        out << "  layout=dot;\n";
+        out << "  node [shape=box];\n";
         for (int i = 1; i < 2 * n; i++) {
-            auto bounds = layout.get_node_bounds(seg_tree::point(i));
-            os << "  " << i << " [label=<\n";
-            os << "    <table border=\"0\" cellborder=\"1\" cellspacing=\"0\" cellpadding=\"4\">\n";
-            os << "      <tr><td bgcolor=\"lightgrey\">[" << bounds[0] << ", " << bounds[1] << ")</td></tr>\n";
-            
-            os << "      <tr><td>" << encode_html(get_string(infos[i])) << "</td></tr>\n";
-            
+            std::string fill_header = (i >= n) ? "\"#F0F8FF\"" : "\"#FFDAB9\"";
+            out << "  " << i << " [shape=none, margin=0, label=<<table border=\"0\" cellborder=\"1\" cellspacing=\"0\" cellpadding=\"4\">";
+            out << "<tr><td bgcolor=" << fill_header << ">Node " << i << "</td></tr>";
+            out << "<tr><td bgcolor=\"#FFFFE0\">Val: "; _dbglib::gracie_safe_print(out, infos[i]); out << "</td></tr>";
             if (i < n) {
-                os << "      <tr><td bgcolor=\"#ffffd5\">" << encode_html(get_string(tags[i])) << "</td></tr>\n";
+                out << "<tr><td bgcolor=\"#FFB6C1\">Tag: "; _dbglib::gracie_safe_print(out, tags[i]); out << "</td></tr>";
             }
-            
-            os << "    </table>\n";
-            os << "  >];\n";
+            out << "</table>>];\n";
+            if (i < n) {
+                out << "  " << i << " -> " << 2 * i << ";\n";
+                out << "  " << i << " -> " << 2 * i + 1 << ";\n";
+            }
         }
-        
-        for (int i = 1; i < n; i++) {
-            os << "  " << i << " -> " << 2 * i << ";\n";
-            os << "  " << i << " -> " << 2 * i + 1 << ";\n";
-        }
-        os << "}\n";
-        return os.str();
+        out << "}\n";
+        return out.str();
+    }
+    friend std::ostream& operator<<(std::ostream& os, const LazySegmentTree& st) {
+        return os << "[LazySegmentTree n=" << st.n << "]";
     }
 #endif
 };

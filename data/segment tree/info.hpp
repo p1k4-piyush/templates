@@ -1,3 +1,6 @@
+
+//  https://github.com/the-tourist/algo/blob/master/segtree/info.cpp
+
 struct Info {
     int cur;
 
@@ -24,11 +27,8 @@ struct Info {
     }
 
 #ifdef GRACIE
-    std::string print() const
-    {
-        std::ostringstream os;
-        _dbglib::dbg_impl(os, cur, false);
-        return os.str();
+    friend std::ostream& operator<<(std::ostream& os, const Info& i) {
+        return os << i.cur;
     }
 #endif
 };

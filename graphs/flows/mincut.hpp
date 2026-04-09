@@ -1,47 +1,100 @@
-
-using namespace std;
-
 #ifdef GRACIE
 template <typename T>
 struct mincut_result : public pair<T, vector<bool>> {
     vector<vector<T>> orig_g;
+    mincut_result(const pair<T, vector<bool>>& p, const vector<vector<T>>& g) : pair<T, vector<bool>>(p), orig_g(g) {}
+
+    friend std::ostream& operator<<(std::ostream& os, const mincut_result& m) {
+        os << "(cost: " << m.first << ", cut: [";
+        for (bool b : m.second) os << b << ",";
+        return os << "])";
+    }
 
     std::string graphviz() const {
-        std::ostringstream os;
-        os << "graph G {\n"; 
-        os << "  node [shape=circle, fontname=\"Courier\"];\n";
-        
-        const auto& g = orig_g;
-        int n = g.size();
-        for (int i = 0; i < n; ++i) {
-            os << "  " << i << " [label=\"" << i << "\"";
-            if (this->second[i]) {
-               os << ", style=filled, fillcolor=\"#a2ff9c\"";
-            } else {
-               os << ", style=filled, fillcolor=\"#ffbc82\"";
-            }
-            os << "];\n";
+        std::ostringstream out;
+        int n = orig_g.size();
+        out << "graph G {\n";
+        out << "  node [shape=circle];\n";
+        for (int i = 0; i < n; i++) {
+            out << "  " << i << " [label=\"" << i << "\"";
+            if (this->second[i]) out << ", style=filled, fillcolor=yellow";
+            out << "];\n";
         }
-
-        for (int i = 0; i < n; ++i) {
-            for (int j = i + 1; j < n; ++j) {
-                if (g[i][j] > 0) {
-                    os << "  " << i << " -- " << j << " [label=\"" << g[i][j] << "\"";
-                    if (this->second[i] != this->second[j]) { 
-                        os << ", color=\"red\", style=\"dashed\", penwidth=2.5, fontcolor=\"red\"";
-                    } else {
-                        os << ", color=\"gray80\", fontcolor=\"gray80\"";
-                    }
-                    os << "];\n";
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                if (orig_g[i][j] > 0) {
+                    bool is_cut = (this->second[i] != this->second[j]);
+                    out << "  " << i << " -- " << j << " [label=\"" << orig_g[i][j] << "\"";
+                    if (is_cut) out << ", color=red, style=dashed, penwidth=2";
+                    out << "];\n";
                 }
             }
         }
-        os << "}\n";
-        return os.str();
+        out << "}\n";
+        return out.str();
     }
 };
+template <typename T>
+mincut_result<T> MinCut(vector<vector<T>> g) {
 #else
 template <typename T>
-using mincut_result = pair<T, vector<bool>>;
+pair<T, vector<bool>> MinCut(vector<vector<T>> g) {
 #endif
-
+  int n = static_cast<int>(g.size());
+#ifdef GRACIE
+  vector<vector<T>> orig_g = g;
+#endif
+  for (int i = 0; i < n; i++) {
+    assert(static_cast<int>(g[i].size()) == n);
+  }
+  for (int i = 0; i < n; i++) {
+    for (int j = i + 1; j < n; j++) {
+      assert(g[i][j] == g[j][i]);
+    }
+  }
+  vector<vector<bool>> v(n, vector<bool>(n));
+  for (int i = 0; i < n; i++) {
+    v[i][i] = true;
+  }
+  vector<T> w(n);
+  vector<bool> exists(n, true);
+  vector<bool> in_a(n);
+  T best_cost = numeric_limits<T>::max();
+  vector<bool> best_cut;
+  for (int ph = 0; ph < n - 1; ph++) {
+    fill(in_a.begin(), in_a.end(), false);
+    fill(w.begin(), w.end(), T(0));
+    int prev = -1;
+    for (int it = 0; it < n - ph; it++) {
+      int sel = -1;
+      for (int i = 0; i < n; i++) {
+        if (exists[i] && !in_a[i] && (sel == -1 || w[i] > w[sel])) {
+          sel = i;
+        }
+      }
+      if (it == n - ph - 1) {
+        if (w[sel] < best_cost) {
+          best_cost = w[sel];
+          best_cut = v[sel];
+        }
+        for (int i = 0; i < n; i++) {
+          v[prev][i] = v[prev][i] | v[sel][i];
+          g[prev][i] += g[sel][i];
+          g[i][prev] += g[i][sel];
+        }
+        exists[sel] = false;
+        break;
+      }
+      in_a[sel] = true;
+      for (int i = 0; i < n; i++) {
+        w[i] += g[sel][i];
+      }
+      prev = sel;
+    }
+  }
+#ifdef GRACIE
+  return mincut_result<T>(make_pair(best_cost, best_cut), orig_g);
+#else
+  return make_pair(best_cost, best_cut);
+#endif
+}

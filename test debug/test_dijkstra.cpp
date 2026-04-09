@@ -7,15 +7,15 @@ using namespace std;
 #include "../graphs/dijkstra.hpp"
 
 int main() {
-    undigraph<int> g(100);
+    undigraph<int> g(10);
     mt19937 rng(444);
-    for (int i = 1; i < 100; i++) {
+    for (int i = 1; i < 10; i++) {
         uniform_int_distribution<int> unif(0, i - 1);
         uniform_int_distribution<int> cost(1, 100);
         g.add(i, unif(rng), cost(rng));
     }
-    for (int i = 0; i < 50; i++) {
-        uniform_int_distribution<int> unif(0, 99);
+    for (int i = 0; i < 10; i++) {
+        uniform_int_distribution<int> unif(0, 9);
         uniform_int_distribution<int> cost(1, 100);
         int u = unif(rng), v = unif(rng);
         if (u != v) g.add(u, v, cost(rng));

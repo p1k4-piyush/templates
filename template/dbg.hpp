@@ -1,8 +1,6 @@
 #pragma once
 
-#include <algorithm>
 #include <bit>
-#include <cctype>
 #include <concepts>
 #include <iomanip>
 #include <iostream>
@@ -20,7 +18,6 @@
 #include <mutex>
 #include <sstream>
 
-#ifdef GRACIE
 namespace _dbglib {
 enum { BLACK = 0,
     RED,
@@ -67,6 +64,48 @@ constexpr auto ansi_escape_code(int style = RESET) { return escape_codes[style];
 
 template <class T>
 constexpr bool is_string = std::is_same_v<T, std::string> or std::is_same_v<T, std::string_view> or std::is_same_v<std::decay_t<T>, char*> or std::is_same_v<std::decay_t<T>, const char*>;
+
+// Fallback logic for user-defined generic structures like vectors in Segment Trees
+template <typename T>
+concept _GracieIterable = requires(T x) { std::begin(x); std::end(x); } && !std::is_same_v<T, std::string>;
+
+template <typename T>
+concept has_gracie_ostream = requires(std::ostream& os, const T& x) { os << x; };
+
+template <typename T>
+concept has_gracie_print = requires(const T& x) { x.print(); };
+
+template <typename T>
+concept has_gracie_to_string = requires(const T& x) { x.to_string(); };
+
+inline void gracie_safe_print(std::ostream& os, const auto& x, int depth = 0) {
+    using T = std::remove_cvref_t<decltype(x)>;
+    if constexpr (has_gracie_ostream<T>) {
+        os << x;
+    } else if constexpr (has_gracie_print<T>) {
+        os << x.print();
+    } else if constexpr (has_gracie_to_string<T>) {
+        os << x.to_string();
+    } else if constexpr (_GracieIterable<T>) {
+        os << "{";
+        bool first = true;
+        for (const auto& i : x) {
+            if (!first) os << ", ";
+            first = false;
+            gracie_safe_print(os, i, depth + 1);
+        }
+        os << "}";
+    } else if constexpr (requires { std::tuple_size<T>{}; }) {
+        os << "(";
+        std::apply([&](auto const&... xs) {
+            int f = 0;
+            ((os << (f++ ? ", " : ""), gracie_safe_print(os, xs, depth + 1)), ...);
+        }, x);
+        os << ")";
+    } else {
+        os << "[Struct]";
+    }
+}
 
 void dbg_impl(std::ostream& os, auto const& x, bool styled = true, int d = 0)
 {
@@ -192,7 +231,7 @@ void dbg_pretty_impl(std::ostream& os, auto const& x, bool styled = true, int d 
     } else if constexpr (requires { std::variant_size<T> {}; }) {
         std::visit([&](auto const& v) { dbg_pretty_impl(os, v, styled, d); }, x);
     } else {
-        os << x;
+        gracie_safe_print(os, x, d);
     }
 }
 
@@ -225,15 +264,22 @@ inline std::string save_graph_and_open(int line, std::string const& gv)
         ofs << gv;
     }
 
-    std::string tool = "neato";
-    if (gv.find("digraph G") != std::string::npos || gv.find("digraph ") != std::string::npos) {
-        tool = "dot";
+    std::string engine = "neato";
+    if (auto pos = gv.find("layout="); pos != std::string::npos) {
+        auto end = gv.find_first_of(" ;\"\n\r", pos + 7);
+        engine = gv.substr(pos + 7, end - (pos + 7));
+        if (!engine.empty() && engine[0] == '"') {
+            engine = engine.substr(1, engine.length() - 2);
+        }
+    } else if (gv.find("digraph") != std::string::npos) {
+        engine = "dot";
     }
 
-    std::string cmd = tool + " -Tpng " + dotname + " -o " + pngname + " >/dev/null 2>&1 || /opt/homebrew/bin/" + tool + " -Tpng " + dotname + " -o " + pngname + "; open " + pngname + " >/dev/null 2>&1";
+    std::string cmd = engine + " -Tpng " + dotname + " -o " + pngname + "; open " + pngname + "";
     std::system(cmd.c_str());
     return pngname;
 }
+
 
 template <typename U>
 void debug_print_with_graph(std::ostream& os, int line, U const& v, bool styled, int d = 0)
@@ -254,19 +300,34 @@ void debug_print_with_graph(std::ostream& os, int line, U const& v, bool styled,
         }
         auto png = save_graph_and_open(line, s);
         os << S(GREEN) << "<graphviz:" << png << ">" << S();
-    } else if constexpr (requires { std::declval<std::ostream&>() << std::declval<U const&>(); }) {
+        return;
+    }
+
+    auto looks_like_dot = [&](std::string_view s) {
+        if (s.empty())
+            return false;
+        // Strict boundary validation to strictly avoid blindly catching conversational "test digraph" titles!
+        std::string h(s);
+        std::transform(h.begin(), h.end(), h.begin(), [](unsigned char c) { return std::tolower(c); });
+        
+        // Strip leading whitespace
+        size_t start = h.find_first_not_of(" \t\n\r");
+        if (start == std::string::npos) return false;
+        h = h.substr(start);
+        
+        if (s.find('{') == std::string::npos || s.find('}') == std::string::npos)
+            return false;
+            
+        if (h.starts_with("digraph") || h.starts_with("strict digraph") || h.starts_with("graph ") || h.starts_with("strict graph"))
+            return true;
+            
+        return false;
+    };
+
+    if constexpr (requires { std::declval<std::ostream&>() << std::declval<U const&>(); }) {
         std::ostringstream ss;
         ss << v;
         auto s = ss.str();
-
-        auto looks_like_dot = [&](std::string_view sv) {
-            if (sv.empty()) return false;
-            size_t start = sv.find_first_not_of(" \t\n\r");
-            if (start == std::string::npos) return false;
-            std::string_view h = sv.substr(start);
-            if (h.starts_with("digraph") || h.starts_with("graph") || h.starts_with("strict")) return true;
-            return false;
-        };
 
         if (looks_like_dot(s)) {
             auto png = save_graph_and_open(line, s);
@@ -274,9 +335,10 @@ void debug_print_with_graph(std::ostream& os, int line, U const& v, bool styled,
         } else {
             dbg_pretty_impl(os, v, styled, d);
         }
-    } else {
-        dbg_pretty_impl(os, v, styled, d);
+        return;
     }
+
+    dbg_pretty_impl(os, v, styled, d);
 }
 // ---------- end Graphviz helpers ----------
 
@@ -351,7 +413,3 @@ void dbg_repr_line(char const* repr, std::source_location loc, bool styled, auto
 
 #define dbg(...) _dbglib::dbg_repr(#__VA_ARGS__, std::source_location::current(), 1 __VA_OPT__(, ) __VA_ARGS__)
 #define dbgl(...) _dbglib::dbg_repr_line(#__VA_ARGS__, std::source_location::current(), 1 __VA_OPT__(, ) __VA_ARGS__)
-#else
-#define dbg(...)
-#define dbgl(...)
-#endif

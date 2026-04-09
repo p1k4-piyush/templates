@@ -1,6 +1,3 @@
-
-using namespace std;
-
 class matching {
  public:
   vector<vector<int>> g;
@@ -45,6 +42,39 @@ class matching {
     return false;
   }
 
+#ifdef GRACIE
+  std::string graphviz() const {
+    std::ostringstream out;
+    out << "graph G {\n";
+    out << "  rankdir=LR;\n";
+    out << "  node [shape=circle];\n";
+    out << "  subgraph cluster_L {\n";
+    out << "    label=\"Left (0.." << n - 1 << ")\";\n";
+    for (int i = 0; i < n; i++) out << "    L" << i << " [label=\"L" << i << "\"];\n";
+    out << "  }\n";
+    out << "  subgraph cluster_R {\n";
+    out << "    label=\"Right (0.." << m - 1 << ")\";\n";
+    for (int j = 0; j < m; j++) out << "    R" << j << " [label=\"R" << j << "\"];\n";
+    out << "  }\n";
+    std::set<std::pair<int, int>> drawn;
+    for (int i = 0; i < n; i++) {
+      for (int u : g[i]) {
+        if (drawn.insert({i, u}).second) {
+          bool active = (pa[i] == u);
+          out << "  L" << i << " -- R" << u;
+          if (active) out << " [color=blue, penwidth=2]";
+          else out << " [style=dotted, color=gray]";
+          out << ";\n";
+        }
+      }
+    }
+    out << "}\n";
+    return out.str();
+  }
+  friend std::ostream& operator<<(std::ostream& os, const matching& r) {
+      return os << "Max Match: " << r.res;
+  }
+#endif
   int solve() {
     mt19937_64 rng(uint32_t(chrono::steady_clock::now().time_since_epoch().count()));
     for (int i = 0; i < n; i++) {
@@ -73,41 +103,4 @@ class matching {
     iter++;
     return (int) dfs(v);
   }
-
-#ifdef GRACIE
-  std::string graphviz() const {
-    std::ostringstream os;
-    os << "digraph G {\n";
-    os << "  rankdir=LR;\n";
-    os << "  node [shape=circle, fontname=\"Courier\"];\n";
-    
-    os << "  subgraph cluster_L {\n";
-    os << "    style=invis;\n";
-    for (int i = 0; i < n; i++) {
-        os << "    L" << i << " [label=\"L" << i << "\"];\n";
-    }
-    os << "  }\n";
-
-    os << "  subgraph cluster_R {\n";
-    os << "    style=invis;\n";
-    for (int j = 0; j < m; j++) {
-        os << "    R" << j << " [label=\"R" << j << "\"];\n";
-    }
-    os << "  }\n";
-
-    for (int i = 0; i < n; ++i) {
-      for (int u : g[i]) {
-          os << "  L" << i << " -> R" << u;
-          if (pa[i] == u) {
-             os << " [color=\"red\", penwidth=2.5]";
-          } else {
-             os << " [color=\"gray80\"]";
-          }
-          os << ";\n";
-      }
-    }
-    os << "}\n";
-    return os.str();
-  }
-#endif
 };

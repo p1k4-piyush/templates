@@ -75,5 +75,86 @@ class hld_forest : public dfs_forest<T> {
     build_hld(vector<int>());
   }
 
+  int lca(int x, int y) {
+    while (head[x] != head[y]) {
+      if (depth[head[x]] > depth[head[y]]) {
+        swap(x, y);
+      }
+      y = pv[head[y]];
+    }
+    return depth[x] < depth[y] ? x : y;
+  }
+
   bool apply_on_path(int x, int y, bool with_lca, function<void(int,int,bool)> f) {
+    int res = lca(x, y);
+    if (res == -1) {
+      return false;
+    }
+    vector<pair<int, int>> up, down;
+    while (head[x] != head[res]) {
+      up.emplace_back(pos[x], pos[head[x]]);
+      x = pv[head[x]];
+    }
+    up.emplace_back(pos[x], pos[res] + (with_lca ? 0 : 1));
+    while (head[y] != head[res]) {
+      down.emplace_back(pos[head[y]], pos[y]);
+      y = pv[head[y]];
+    }
+    down.emplace_back(pos[res] + (with_lca ? 0 : 1), pos[y]);
+    for (auto &p : up) {
+      f(p.first, p.second, true);
+    }
+    reverse(down.begin(), down.end());
+    for (auto &p : down) {
+      f(p.first, p.second, false);
+    }
+    return true;
+  }
+
+#ifdef GRACIE
+  std::string graphviz() const {
+    std::ostringstream out;
+    out << "graph G {\n";
+    out << "  node [shape=circle, margin=0.03, fontsize=10];\n";
     
+    std::map<int, std::string> chain_colors;
+    const std::string colors[] = { 
+        "dodgerblue", "crimson", "forestgreen", "darkorchid", "darkorange", 
+        "deeppink", "saddlebrown", "teal", "navy", "firebrick", "purple", "seagreen" 
+    };
+    int color_idx = 0;
+    
+    for (int i = 0; i < n; i++) {
+        int h = head[i];
+        if (chain_colors.find(h) == chain_colors.end()) {
+            chain_colors[h] = colors[color_idx % 12];
+            color_idx++;
+        }
+    }
+    
+    for (int i = 0; i < n; i++) {
+        out << "  " << i << " [color=\"" << chain_colors[head[i]] << "\", fontcolor=\"" << chain_colors[head[i]] << "\", penwidth=2];\n";
+    }
+    
+    for (const auto& e : edges) {
+        out << "  " << e.from << " -- " << e.to;
+        std::ostringstream opts;
+        if (e.cost != 1) opts << "label=\"" << e.cost << "\"";
+        
+        if (head[e.from] == head[e.to]) { // Heavy edge binding
+            if (opts.str().length() > 0) opts << ", ";
+            opts << "color=\"" << chain_colors[head[e.from]] << "\", penwidth=3";
+        } else { // Light edge boundary
+             if (opts.str().length() > 0) opts << ", ";
+             opts << "style=dashed, color=gray, penwidth=1";
+        }
+        
+        if (opts.str().length() > 0) out << " [" << opts.str() << "]";
+        out << ";\n";
+    }
+    
+    out << "}\n";
+    return out.str();
+  }
+#endif
+};

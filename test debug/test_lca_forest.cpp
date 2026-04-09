@@ -9,9 +9,9 @@ using namespace std;
 #include "../graphs/lca_forest.hpp"
 
 int main() {
-    lca_forest<int> g(100);
+    lca_forest<int> g(15);
     mt19937 rng(7);
-    for (int i = 1; i < 100; i++) {
+    for (int i = 1; i < 15; i++) {
         uniform_int_distribution<int> unif(0, i - 1);
         g.add(i, unif(rng));
     }

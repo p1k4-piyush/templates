@@ -1,7 +1,10 @@
-#include <iostream>
-#include <random>
+#include <bits/stdc++.h>
+using namespace std;
 
 #include "../template/dbg.hpp"
+#include "../graphs/graph.hpp"
+#include "../graphs/undigraph.hpp"
+#include "../graphs/forest.hpp"
 #include "../graphs/flows/flow_graph.hpp"
 #include "../graphs/flows/dinic.hpp"
 #include "../graphs/flows/mcmf.hpp"
@@ -17,16 +20,16 @@ using namespace std;
 
 void test_dinic_fastflow() {
     flow_graph<long long> fg(6, 0, 5);
-    fg.add(0, 1, 16);
-    fg.add(0, 2, 13);
+    fg.add(0, 1, 16, 0);
+    fg.add(0, 2, 13, 0);
     fg.add(1, 2, 10, 4); // Added initial backward cap for variation
-    fg.add(1, 3, 12);
-    fg.add(2, 1, 4);
-    fg.add(2, 4, 14);
-    fg.add(3, 2, 9);
-    fg.add(3, 5, 20);
-    fg.add(4, 3, 7);
-    fg.add(4, 5, 4);
+    fg.add(1, 3, 12, 0);
+    fg.add(2, 1, 4, 0);
+    fg.add(2, 4, 14, 0);
+    fg.add(3, 2, 9, 0);
+    fg.add(3, 5, 20, 0);
+    fg.add(4, 3, 7, 0);
+    fg.add(4, 5, 4, 0);
 
     dinic<long long> din(fg);
     long long ans = din.max_flow();
@@ -37,16 +40,16 @@ void test_dinic_fastflow() {
 
     // Fast Flow Test
     fastflow<long long> ff(6, 0, 5);
-    ff.add(0, 1, 16);
-    ff.add(0, 2, 13);
+    ff.add(0, 1, 16, 0);
+    ff.add(0, 2, 13, 0);
     ff.add(1, 2, 10, 4); 
-    ff.add(1, 3, 12);
-    ff.add(2, 1, 4);
-    ff.add(2, 4, 14);
-    ff.add(3, 2, 9);
-    ff.add(3, 5, 20);
-    ff.add(4, 3, 7);
-    ff.add(4, 5, 4);
+    ff.add(1, 3, 12, 0);
+    ff.add(2, 1, 4, 0);
+    ff.add(2, 4, 14, 0);
+    ff.add(3, 2, 9, 0);
+    ff.add(3, 5, 20, 0);
+    ff.add(4, 3, 7, 0);
+    ff.add(4, 5, 4, 0);
     
     ff.max_flow();
     auto fast_cut = ff.min_cut();

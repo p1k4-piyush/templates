@@ -1,48 +1,41 @@
-
-using namespace std;
-
 #ifdef GRACIE
 template <typename T>
 struct blossom_result : public vector<int> {
-    const undigraph<T>* g_ptr;
-
-    std::string graphviz() const {
-        std::ostringstream os;
-        os << "graph G {\n"; 
-        os << "  node [shape=circle, fontname=\"Courier\"];\n";
-        
-        const undigraph<T>& g = *g_ptr;
-        for (int i = 0; i < g.n; ++i) {
-            os << "  " << i << " [label=\"" << i << "\"];\n";
-        }
-
-        for (int i = 0; i < (int)g.edges.size(); i += 2) {
-            const auto& e = g.edges[i];
-            os << "  " << e.from << " -- " << e.to;
-            if ((*this)[e.from] == e.to) { 
-                os << " [color=\"red\", penwidth=3.5]";
-            } else {
-                os << " [color=\"gray80\"]";
-            }
-            os << ";\n";
-        }
-        os << "}\n";
-        return os.str();
+  const undigraph<T>& g;
+  blossom_result(const vector<int>& m, const undigraph<T>& g_) : vector<int>(m), g(g_) {}
+  
+  std::string graphviz() const {
+    std::ostringstream out;
+    out << "graph G {\n";
+    out << "  node [shape=circle];\n";
+    for (int i = 0; i < g.n; i++) {
+        out << "  " << i << " [label=\"" << i << "\"];\n";
     }
+    std::set<std::pair<int, int>> drawn;
+    for (int i = 0; i < g.n; i++) {
+        for (int id : g.g[i]) {
+            const auto& e = g.edges[id];
+            int u = e.from ^ e.to ^ i;
+            if (i < u) {
+                bool active = ((*this)[i] == u);
+                out << "  " << i << " -- " << u;
+                if (active) out << " [color=blue, penwidth=2]";
+                else out << " [style=dotted, color=gray]";
+                out << ";\n";
+            }
+        }
+    }
+    out << "}\n";
+    return out.str();
+  }
 };
-#else
-template <typename T>
-using blossom_result = vector<int>;
-#endif
-
 template <typename T>
 blossom_result<T> find_max_unweighted_matching(const undigraph<T>& g) {
-  blossom_result<T> mate;
-  mate.assign(g.n, -1);
-#ifdef GRACIE
-  mate.g_ptr = &g;
+#else
+template <typename T>
+vector<int> find_max_unweighted_matching(const undigraph<T>& g) {
 #endif
-
+  vector<int> mate(g.n, -1);
   vector<int> label(g.n);
   vector<int> parent(g.n);
   vector<int> orig(g.n);
@@ -145,5 +138,9 @@ blossom_result<T> find_max_unweighted_matching(const undigraph<T>& g) {
       bfs(i);
     }
   }
+#ifdef GRACIE
+  return blossom_result<T>(mate, g);
+#else
   return mate;
+#endif
 }

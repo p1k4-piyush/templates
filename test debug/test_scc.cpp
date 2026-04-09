@@ -7,16 +7,16 @@ using namespace std;
 #include "../graphs/scc.hpp"
 
 int main() {
-    digraph<int> g(100);
+    digraph<int> g(15);
     mt19937 rng(888);
-    for (int i = 0; i < 200; i++) {
-        uniform_int_distribution<int> unif(0, 99);
+    for (int i = 0; i < 20; i++) {
+        uniform_int_distribution<int> unif(0, 14);
         int u = unif(rng), v = unif(rng);
         if (u != v) g.add(u, v, 1);
     }
     int cnt;
     auto res = find_scc(g, cnt);
     dbg("SCC Scaling Test", res);
-    assert(cnt <= 100);
+    assert(cnt <= 15);
     return 0;
 }

@@ -1,62 +1,88 @@
-#include "bits/stdc++.h"
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <regex>
+#include <cstdlib>
+#include <filesystem>
+#include <vector>
+#include <algorithm>
+
 using namespace std;
-
-#include "../template/dbg.hpp"
-#include "../data/dsu.hpp"
-
-// Required classes / structures
-#include "../graphs/graph.hpp"
-#include "../graphs/forest.hpp"
-#include "../graphs/dfs_forest.hpp"
-#include "../graphs/undigraph.hpp"
-#include "../graphs/digraph.hpp"
-#include "../graphs/dfs_undigraph.hpp"
-
-// Algorithms
-#include "../graphs/bridges.hpp"
-#include "../graphs/cutpoints.hpp"
-#include "../graphs/cycles.hpp"
-#include "../graphs/dijkstra.hpp"
-#include "../graphs/eulerian.hpp"
-#include "../graphs/mst.hpp"
-#include "../graphs/scc.hpp"
-#include "../graphs/topsort.hpp"
-
-void test_scc() {
-    digraph<int> g(4);
-    g.add(0, 1, 1);
-    g.add(1, 2, 1);
-    g.add(2, 0, 1);
-    g.add(2, 3, 1);
-    int cnt;
-    auto res = find_scc(g, cnt);
-    dbg("SCC Test", res);
-}
-
-void test_dijkstra() {
-    undigraph<int> g(4);
-    g.add(0, 1, 5);
-    g.add(0, 2, 2);
-    g.add(2, 1, 1);
-    g.add(1, 3, 4);
-    auto res = dijkstra(g, 0);
-    dbg("Dijkstra Test", res);
-}
-
-void test_mst() {
-    undigraph<int> g(4);
-    g.add(0, 1, 5);
-    g.add(0, 2, 2);
-    g.add(2, 1, 1);
-    g.add(1, 3, 4);
-    int ans = 0;
-    auto res = find_mst(g, ans);
-    dbg("MST test", res);
-}
+namespace fs = std::filesystem;
 
 int main() {
-    test_scc();
-    test_dijkstra();
-    test_mst();
+    string base_dir = fs::exists("test debug") ? "test debug" : ".";
+    vector<string> tests;
+    for (const auto& entry : fs::directory_iterator(base_dir)) {
+        string path = entry.path().string();
+        if (path.find("test_all.cpp") != string::npos) continue;
+        if (entry.path().extension() == ".cpp") {
+            tests.push_back(entry.path().stem().string());
+        }
+    }
+    
+    // Sort to have consistent order
+    sort(tests.begin(), tests.end());
+    
+    for (const string& test : tests) {
+        cout << "\n============================================\n";
+        cout << "Running test: " << test << "...\n";
+        cout << "============================================\n";
+        
+        string compile_path = base_dir + "/" + test + ".cpp";
+        string cmd = "g++ -std=c++20 -DLOCAL -DGRACIE \"" + compile_path + "\" -o /tmp/test_runner && /tmp/test_runner 2> /tmp/test_log.txt";
+        int res = system(cmd.c_str());
+        if (res != 0) {
+            cerr << "Test " << test << " failed to compile or run.\n";
+            continue;
+        }
+        
+        ifstream in("/tmp/test_log.txt");
+        string line;
+        string last_title = "";
+        while (getline(in, line)) {
+            // Strip ANSI codes
+            line = regex_replace(line, regex("\x1B\\[[0-9;]*[a-zA-Z]"), "");
+            
+            // Capture preceding literal titles directly if they exist
+            smatch title_match;
+            if (regex_search(line, title_match, regex(R"(^\[\s*\d+\]\s+\"[^\"]+\"\s+=\s*\"([^\"]+)\")"))) {
+                last_title = title_match[1];
+            }
+            
+            smatch match;
+            regex rgx(R"((?:<graphviz:([^>]+)>))");
+            if (regex_search(line, match, rgx)) {
+                if (match.size() >= 2) {
+                    string title = last_title.empty() ? "Struct_" + to_string(rand() % 1000) : last_title;
+                    string old_file = match[1];
+                    
+                    // Force the old file path to implicitly include base_dir if needed
+                    string full_old_file = base_dir + "/" + old_file;
+                    if (!fs::exists(full_old_file)) full_old_file = old_file;
+                    
+                    string new_file = title + ".png";
+                    for (char& c : new_file) if (c == ' ') c = '_';
+                    string full_new_file = base_dir + "/" + new_file;
+                    
+                    string full_old_dot = full_old_file.substr(0, full_old_file.find_last_of('.')) + ".dot";
+                    string new_dot = title + ".dot";
+                    for (char& c : new_dot) if (c == ' ') c = '_';
+                    string full_new_dot = base_dir + "/" + new_dot;
+                    
+                    rename(full_old_file.c_str(), full_new_file.c_str());
+                    rename(full_old_dot.c_str(), full_new_dot.c_str());
+                    
+                    regex replace_rgx(old_file);
+                    line = regex_replace(line, replace_rgx, new_file);
+                    
+                    // Reset title for following structs
+                    last_title = "";
+                }
+            }
+            cerr << line << "\n";
+        }
+    }
+    
     return 0;
 }

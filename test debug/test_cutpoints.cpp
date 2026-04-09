@@ -8,19 +8,19 @@ using namespace std;
 #include "../graphs/cutpoints.hpp"
 
 int main() {
-    dfs_undigraph<int> g(100);
+    dfs_undigraph<int> g(15);
     mt19937 rng(123);
-    for (int i = 1; i < 100; i++) {
+    for (int i = 1; i < 15; i++) {
         uniform_int_distribution<int> unif(0, i - 1);
         g.add(i, unif(rng));
     }
-    for (int i = 0; i < 15; i++) {
-        uniform_int_distribution<int> unif(0, 99);
+    for (int i = 0; i < 5; i++) {
+        uniform_int_distribution<int> unif(0, 14);
         int u = unif(rng), v = unif(rng);
         if (u != v) g.add(u, v);
     }
     auto res = find_cutpoints(g);
     dbg("Cutpoints Scaling Test", res);
-    assert(res.size() == 100);
+    assert(res.size() == 15);
     return 0;
 }

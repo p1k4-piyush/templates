@@ -1,0 +1,38 @@
+graph G {
+  layout=neato;
+  node [shape=circle];
+  0 [label="0"];
+  1 [label="1"];
+  2 [label="2"];
+  3 [label="3"];
+  4 [label="4"];
+  5 [label="5"];
+  6 [label="6"];
+  7 [label="7"];
+  8 [label="8"];
+  9 [label="9"];
+  10 [label="10"];
+  11 [label="11"];
+  12 [label="12"];
+  13 [label="13"];
+  14 [label="14"];
+  1 -- 0 [label="449", color="red", penwidth=2];
+  2 -- 0 [label="870"];
+  3 -- 1 [label="713", color="red", penwidth=2];
+  4 -- 1 [label="476", color="red", penwidth=2];
+  5 -- 1 [label="948"];
+  6 -- 0 [label="630", color="red", penwidth=2];
+  7 -- 0 [label="649", color="red", penwidth=2];
+  8 -- 0 [label="582", color="red", penwidth=2];
+  9 -- 2 [label="12", color="red", penwidth=2];
+  10 -- 5 [label="984", color="red", penwidth=2];
+  11 -- 4 [label="763"];
+  12 -- 6 [label="307", color="red", penwidth=2];
+  13 -- 7 [label="871", color="red", penwidth=2];
+  14 -- 1 [label="703"];
+  5 -- 3 [label="359", color="red", penwidth=2];
+  4 -- 11 [label="545"];
+  9 -- 4 [label="526", color="red", penwidth=2];
+  11 -- 4 [label="73", color="red", penwidth=2];
+  7 -- 14 [label="284", color="red", penwidth=2];
+}
