@@ -1,0 +1,38 @@
+digraph G {
+  node [shape=circle];
+  0 [style=filled, fillcolor=plum];
+  1 [style=filled, fillcolor=lightcoral];
+  2 [style=filled, fillcolor=lightgreen];
+  3 [style=filled, fillcolor=plum];
+  4 [style=filled, fillcolor=lightcoral];
+  5 [style=filled, fillcolor=lightgreen];
+  6 [style=filled, fillcolor=khaki];
+  7 [style=filled, fillcolor=lightblue];
+  8 [style=filled, fillcolor=lightblue];
+  9 [style=filled, fillcolor=wheat];
+  10 [style=filled, fillcolor=wheat];
+  11 [style=filled, fillcolor=khaki];
+  12 [style=filled, fillcolor=wheat];
+  13 [style=filled, fillcolor=wheat];
+  14 [style=filled, fillcolor=wheat];
+  0 -> 9;
+  1 -> 0;
+  2 -> 14;
+  3 -> 7;
+  3 -> 0;
+  3 -> 10;
+  3 -> 12;
+  4 -> 1;
+  6 -> 10;
+  7 -> 2;
+  8 -> 6;
+  8 -> 5;
+  9 -> 14 [color=red, penwidth=2];
+  10 -> 14 [color=red, penwidth=2];
+  12 -> 13 [color=red, penwidth=2];
+  13 -> 6;
+  13 -> 12 [color=red, penwidth=2];
+  14 -> 10 [color=red, penwidth=2];
+  14 -> 9 [color=red, penwidth=2];
+  14 -> 11;
+}

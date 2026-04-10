@@ -1,0 +1,26 @@
+graph G {
+  rankdir=LR;
+  node [shape=circle];
+  subgraph cluster_L {
+    label="Left (0..3)";
+    L0 [label="L0"];
+    L1 [label="L1"];
+    L2 [label="L2"];
+    L3 [label="L3"];
+  }
+  subgraph cluster_R {
+    label="Right (0..4)";
+    R0 [label="R0"];
+    R1 [label="R1"];
+    R2 [label="R2"];
+    R3 [label="R3"];
+    R4 [label="R4"];
+  }
+  L0 -- R1 [style=dotted, color=gray];
+  L0 -- R2 [color=blue, penwidth=2];
+  L1 -- R2 [style=dotted, color=gray];
+  L1 -- R3 [color=blue, penwidth=2];
+  L2 -- R4 [style=dotted, color=gray];
+  L2 -- R1 [color=blue, penwidth=2];
+  L3 -- R4 [color=blue, penwidth=2];
+}
