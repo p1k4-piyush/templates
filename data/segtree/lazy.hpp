@@ -166,7 +166,8 @@ std::string graphviz(const LazySegmentTree<Info, Tag>& st)
     for (int i = 1; i < 2 * st.n; i++) {
         std::string fill_header = (i >= st.n) ? "\"#F0F8FF\"" : "\"#FFDAB9\"";
         out << "  " << i << " [shape=none, margin=0, label=<<table border=\"0\" cellborder=\"1\" cellspacing=\"0\" cellpadding=\"4\">";
-        out << "<tr><td bgcolor=" << fill_header << ">Node " << i << "</td></tr>";
+        std::array<int, 2> bounds = st.layout.get_node_bounds(seg_tree::point(i));
+        out << "<tr><td bgcolor=" << fill_header << ">Node " << i << " [" << bounds[0] << ":" << (bounds[1] - 1) << "]</td></tr>";
         out << "<tr><td bgcolor=\"#FFFFE0\">Val: ";
         _dbglib::gracie_safe_print(out, st.infos[i]);
         out << "</td></tr>";
