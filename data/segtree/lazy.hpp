@@ -153,12 +153,12 @@ public:
             });
         return res;
     }
-
 };
 
 #ifdef GRACIE
 template <typename Info, typename Tag>
-std::string graphviz(const LazySegmentTree<Info, Tag>& st) {
+std::string graphviz(const LazySegmentTree<Info, Tag>& st)
+{
     std::ostringstream out;
     out << "digraph G {\n";
     out << "  layout=dot;\n";
@@ -167,9 +167,13 @@ std::string graphviz(const LazySegmentTree<Info, Tag>& st) {
         std::string fill_header = (i >= st.n) ? "\"#F0F8FF\"" : "\"#FFDAB9\"";
         out << "  " << i << " [shape=none, margin=0, label=<<table border=\"0\" cellborder=\"1\" cellspacing=\"0\" cellpadding=\"4\">";
         out << "<tr><td bgcolor=" << fill_header << ">Node " << i << "</td></tr>";
-        out << "<tr><td bgcolor=\"#FFFFE0\">Val: "; _dbglib::gracie_safe_print(out, st.infos[i]); out << "</td></tr>";
+        out << "<tr><td bgcolor=\"#FFFFE0\">Val: ";
+        _dbglib::gracie_safe_print(out, st.infos[i]);
+        out << "</td></tr>";
         if (i < st.n) {
-            out << "<tr><td bgcolor=\"#FFB6C1\">Tag: "; _dbglib::gracie_safe_print(out, st.tags[i]); out << "</td></tr>";
+            out << "<tr><td bgcolor=\"#FFB6C1\">Tag: ";
+            _dbglib::gracie_safe_print(out, st.tags[i]);
+            out << "</td></tr>";
         }
         out << "</table>>];\n";
         if (i < st.n) {

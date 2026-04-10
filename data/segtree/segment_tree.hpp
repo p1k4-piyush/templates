@@ -110,12 +110,12 @@ public:
             });
         return res;
     }
-
 };
 
 #ifdef GRACIE
 template <typename Info>
-std::string graphviz(const SimpleSegmentTree<Info>& st) {
+std::string graphviz(const SimpleSegmentTree<Info>& st)
+{
     std::ostringstream out;
     out << "digraph G {\n";
     out << "  layout=dot;\n";
@@ -124,7 +124,9 @@ std::string graphviz(const SimpleSegmentTree<Info>& st) {
         std::string fill_header = (i >= st.n) ? "\"#F0F8FF\"" : "\"#FFDAB9\"";
         out << "  " << i << " [shape=none, margin=0, label=<<table border=\"0\" cellborder=\"1\" cellspacing=\"0\" cellpadding=\"4\">";
         out << "<tr><td bgcolor=" << fill_header << ">Node " << i << "</td></tr>";
-        out << "<tr><td bgcolor=\"#FFFFE0\">Val: "; _dbglib::gracie_safe_print(out, st.infos[i]); out << "</td></tr></table>>];\n";
+        out << "<tr><td bgcolor=\"#FFFFE0\">Val: ";
+        _dbglib::gracie_safe_print(out, st.infos[i]);
+        out << "</td></tr></table>>];\n";
         if (i < st.n) {
             out << "  " << i << " -> " << 2 * i << ";\n";
             out << "  " << i << " -> " << 2 * i + 1 << ";\n";

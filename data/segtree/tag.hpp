@@ -30,7 +30,8 @@ struct Tag {
     }
 
 #ifdef GRACIE
-    friend std::ostream& operator<<(std::ostream& os, const Tag& t) {
+    friend std::ostream& operator<<(std::ostream& os, const Tag& t)
+    {
         return os << t.add;
     }
 #endif

@@ -24,7 +24,8 @@ struct Info {
     }
 
 #ifdef GRACIE
-    friend std::ostream& operator<<(std::ostream& os, const Info& i) {
+    friend std::ostream& operator<<(std::ostream& os, const Info& i)
+    {
         return os << i.cur;
     }
 #endif
