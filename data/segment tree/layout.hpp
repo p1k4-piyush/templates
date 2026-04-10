@@ -1,6 +1,3 @@
-
-//  https://github.com/the-tourist/algo/blob/master/segtree/layout.cpp
-
 namespace seg_tree {
 
 // Floor of log_2(a); index of highest 1-bit

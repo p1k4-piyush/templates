@@ -111,8 +111,11 @@ class hld_forest : public dfs_forest<T> {
     return true;
   }
 
+};
+
 #ifdef GRACIE
-  std::string graphviz() const {
+template <typename T>
+std::string graphviz(const hld_forest<T>& f) {
     std::ostringstream out;
     out << "graph G {\n";
     out << "  node [shape=circle, margin=0.03, fontsize=10];\n";
@@ -124,27 +127,27 @@ class hld_forest : public dfs_forest<T> {
     };
     int color_idx = 0;
     
-    for (int i = 0; i < n; i++) {
-        int h = head[i];
+    for (int i = 0; i < f.n; i++) {
+        int h = f.head[i];
         if (chain_colors.find(h) == chain_colors.end()) {
             chain_colors[h] = colors[color_idx % 12];
             color_idx++;
         }
     }
     
-    for (int i = 0; i < n; i++) {
-        out << "  " << i << " [color=\"" << chain_colors[head[i]] << "\", fontcolor=\"" << chain_colors[head[i]] << "\", penwidth=2];\n";
+    for (int i = 0; i < f.n; i++) {
+        out << "  " << i << " [color=\"" << chain_colors[f.head[i]] << "\", fontcolor=\"" << chain_colors[f.head[i]] << "\", penwidth=2];\n";
     }
     
-    for (const auto& e : edges) {
+    for (const auto& e : f.edges) {
         out << "  " << e.from << " -- " << e.to;
         std::ostringstream opts;
         if (e.cost != 1) opts << "label=\"" << e.cost << "\"";
         
-        if (head[e.from] == head[e.to]) { // Heavy edge binding
+        if (f.head[e.from] == f.head[e.to]) {
             if (opts.str().length() > 0) opts << ", ";
-            opts << "color=\"" << chain_colors[head[e.from]] << "\", penwidth=3";
-        } else { // Light edge boundary
+            opts << "color=\"" << chain_colors[f.head[e.from]] << "\", penwidth=3";
+        } else {
              if (opts.str().length() > 0) opts << ", ";
              opts << "style=dashed, color=gray, penwidth=1";
         }
@@ -155,6 +158,5 @@ class hld_forest : public dfs_forest<T> {
     
     out << "}\n";
     return out.str();
-  }
+}
 #endif
-};

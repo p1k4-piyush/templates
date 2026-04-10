@@ -1,5 +1,4 @@
 
-//	https://github.com/the-tourist/algo/
 
 template <typename T>
 T extgcd(T a, T b, T& x, T& y)
@@ -56,7 +55,6 @@ bool diophantine(T a, T b, T c, T& x, T& y, T& g)
     y = dy + (T)((__int128)y * (c / g) % a);
     g = abs(g);
     return true;
-    // |x|, |y| <= max(|a|, |b|, |c|) [tested]
 }
 
 bool crt(int64_t k1, int64_t m1, int64_t k2, int64_t m2, int64_t& k, int64_t& m)

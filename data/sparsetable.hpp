@@ -1,5 +1,4 @@
 
-//  https://github.com/the-tourist/algo/blob/master/data/sparsetable.cpp
 
 template <typename T, typename F>
 class SparseTable {
@@ -30,30 +29,29 @@ public:
         return func(mat[lg][from], mat[lg][to - (1 << lg) + 1]);
     }
 
-#ifdef GRACIE
-    std::string graphviz() const {
-        std::ostringstream os;
-        os << "digraph G {\n  node [shape=plaintext, fontsize=10];\n";
-        os << "  st [label=<\n    <table border=\"0\" cellborder=\"1\" cellspacing=\"0\">\n";
-        os << "      <tr><td bgcolor=\"#eeeeee\"><b>(lg \\\\ i)</b></td>";
-        for (int j = 0; j < n; j++) os << "<td bgcolor=\"#eeeeee\"><b>" << j << "</b></td>";
-        os << "</tr>\n";
-        for (int j = 0; j < (int)mat.size(); j++) {
-            os << "      <tr><td bgcolor=\"#eeeeee\"><b>" << j << " (len " << (1 << j) << ")</b></td>";
-            for (int i = 0; i < n; i++) {
-                if (i < (int)mat[j].size()) {
-                    os << "<td>" << mat[j][i] << "</td>";
-                } else {
-                    os << "<td bgcolor=\"#cccccc\"></td>";
-                }
-            }
-            os << "</tr>\n";
-        }
-        os << "    </table>\n  >];\n}\n";
-        return os.str();
-    }
-    friend std::ostream& operator<<(std::ostream& os, const SparseTable& st) {
-        return os << "[SparseTable n=" << st.n << "]";
-    }
-#endif
 };
+
+#ifdef GRACIE
+template <typename T, typename F>
+std::string graphviz(const SparseTable<T, F>& st) {
+    std::ostringstream os;
+    os << "digraph G {\n  node [shape=plaintext, fontsize=10];\n";
+    os << "  st [label=<\n    <table border=\"0\" cellborder=\"1\" cellspacing=\"0\">\n";
+    os << "      <tr><td bgcolor=\"#eeeeee\"><b>(lg \\\\ i)</b></td>";
+    for (int j = 0; j < st.n; j++) os << "<td bgcolor=\"#eeeeee\"><b>" << j << "</b></td>";
+    os << "</tr>\n";
+    for (int j = 0; j < (int)st.mat.size(); j++) {
+        os << "      <tr><td bgcolor=\"#eeeeee\"><b>" << j << " (len " << (1 << j) << ")</b></td>";
+        for (int i = 0; i < st.n; i++) {
+            if (i < (int)st.mat[j].size()) {
+                os << "<td>" << st.mat[j][i] << "</td>";
+            } else {
+                os << "<td bgcolor=\"#cccccc\"></td>";
+            }
+        }
+        os << "</tr>\n";
+    }
+    os << "    </table>\n  >];\n}\n";
+    return os.str();
+}
+#endif

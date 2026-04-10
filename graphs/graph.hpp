@@ -1,5 +1,4 @@
 
-//	https://github.com/the-tourist/algo/
 
 template <typename T>
 class graph {
@@ -22,27 +21,9 @@ public:
 
     virtual int add(int from, int to, T cost) = 0;
 
-#ifdef GRACIE
-  virtual std::string graphviz(const std::vector<int>& path = {}, bool directed = true) const {
-    std::ostringstream out;
-    out << (directed ? "digraph" : "graph") << " G {\n";
-    out << "  node [shape=circle];\n";
-    std::vector<bool> in_path(n, false);
-    for (int v : path) if(v >= 0 && v < n) in_path[v] = true;
-    for (int i = 0; i < n; ++i) {
-      out << "  " << i << " [label=\"" << i << "\"";
-      if (in_path[i]) out << ", style=filled, fillcolor=lightblue";
-      out << "];\n";
+    virtual std::string graphviz(const std::vector<int>& path = {}, bool directed = true) const {
+        return "";
     }
-    for (const auto& e : edges) {
-      out << "  " << e.from << (directed ? " -> " : " -- ") << e.to;
-      if (e.cost != 1) out << " [label=\"" << e.cost << "\"]";
-      out << ";\n";
-    }
-    out << "}\n";
-    return out.str();
-  }
-#endif
 
     virtual std::string to_string(int v) const
     {
@@ -115,3 +96,22 @@ public:
         return os;
     }
 };
+
+#ifdef GRACIE
+template <typename T>
+std::string graphviz(const graph<T>& gr) {
+    std::ostringstream out;
+    out << (gr.directed() ? "digraph" : "graph") << " G {\n";
+    out << "  node [shape=circle];\n";
+    for (int i = 0; i < gr.n; ++i) {
+        out << "  " << i << " [label=\"" << i << "\"];\n";
+    }
+    for (const auto& e : gr.edges) {
+        out << "  " << e.from << (gr.directed() ? " -> " : " -- ") << e.to;
+        if (e.cost != 1) out << " [label=\"" << e.cost << "\"]";
+        out << ";\n";
+    }
+    out << "}\n";
+    return out.str();
+}
+#endif

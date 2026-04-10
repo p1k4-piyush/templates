@@ -100,45 +100,7 @@ class MCMF {
     swap(d, pot);
   }
    
-#ifdef GRACIE
-  std::string graphviz(bool simplify = true) const {
-    std::ostringstream out;
-    out << "digraph G {\n";
-    out << "  rankdir=LR;\n";
-    out << "  node [shape=circle];\n";
-    for (int i = 0; i < n; i++) {
-    out << "  " << i << " [label=\"" << i << " (pot=" << pot[i] << ")\"";
-    if (i == n - 1) out << ", style=filled, fillcolor=lightcoral";
-    else if (i == 0) out << ", style=filled, fillcolor=lightgreen";
-    out << "];\n";
-    }
-    for (int id = 0; id < (int)edges.size(); id += 2) {
-    const auto& e = edges[id];
-    const auto& back = edges[id ^ 1];
-    if (simplify && e.c == 0 && back.c == 0) continue;
-    std::ostringstream main_lbl;
-    main_lbl << "f=" << e.f << "/" << e.c;
-    if (e.cost != 1) main_lbl << " @ " << e.cost;
-    
-    out << "  " << e.from << " -> " << e.to 
-        << " [label=\"" << main_lbl.str() << "\"";
-    if (e.f > 0) out << ", color=blue, penwidth=2";
-    out << "];\n";
-    if (!simplify || back.c > 0) {
-        std::ostringstream back_lbl;
-        back_lbl << "f=" << back.f << "/" << back.c;
-        if (back.cost != 1) back_lbl << " @ " << back.cost;
-        out << "  " << back.from << " -> " << back.to 
-            << " [label=\"" << back_lbl.str() << "\", style=dotted];\n";
-    }
-    }
-    out << "}\n";
-    return out.str();
-  }
-  friend std::ostream& operator<<(std::ostream& os, const MCMF& m) {
-      return os << "[MCMF Layer Network]";
-  }
-#endif
+
   pair<T, C> max_flow_min_cost(int st, int fin) {
     T flow = 0;
     C cost = 0;
@@ -238,3 +200,41 @@ class MCMF {
     return {flow, cost};
   }
 };
+
+#ifdef GRACIE
+template <typename T, typename C>
+std::string graphviz(const MCMF<T, C>& m, bool simplify = true) {
+    std::ostringstream out;
+    out << "digraph G {\n";
+    out << "  rankdir=LR;\n";
+    out << "  node [shape=circle];\n";
+    for (int i = 0; i < m.n; i++) {
+        out << "  " << i << " [label=\"" << i << " (pot=" << m.pot[i] << ")\"";
+        if (i == m.n - 1) out << ", style=filled, fillcolor=lightcoral";
+        else if (i == 0) out << ", style=filled, fillcolor=lightgreen";
+        out << "];\n";
+    }
+    for (int id = 0; id < (int)m.edges.size(); id += 2) {
+        const auto& e = m.edges[id];
+        const auto& back = m.edges[id ^ 1];
+        if (simplify && e.c == 0 && back.c == 0) continue;
+        std::ostringstream main_lbl;
+        main_lbl << "f=" << e.f << "/" << e.c;
+        if (e.cost != 1) main_lbl << " @ " << e.cost;
+        
+        out << "  " << e.from << " -> " << e.to 
+            << " [label=\"" << main_lbl.str() << "\"";
+        if (e.f > 0) out << ", color=blue, penwidth=2";
+        out << "];\n";
+        if (!simplify || back.c > 0) {
+            std::ostringstream back_lbl;
+            back_lbl << "f=" << back.f << "/" << back.c;
+            if (back.cost != 1) back_lbl << " @ " << back.cost;
+            out << "  " << back.from << " -> " << back.to 
+                << " [label=\"" << back_lbl.str() << "\", style=dotted];\n";
+        }
+    }
+    out << "}\n";
+    return out.str();
+}
+#endif

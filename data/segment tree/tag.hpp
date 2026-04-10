@@ -1,6 +1,3 @@
-
-//  https://github.com/the-tourist/algo/blob/master/segtree/tag.cpp
-
 struct Tag {
     int add;
 

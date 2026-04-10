@@ -1,35 +1,5 @@
-#ifdef GRACIE
-template <typename T>
-struct gomory_hu_result : public forest<T> {
-  gomory_hu_result(const forest<T>& f) : forest<T>(f) {}
-  std::string graphviz() const {
-    std::ostringstream out;
-    out << "graph G {\n";
-    out << "  node [shape=circle, style=filled, fillcolor=lightblue];\n";
-    for (int i = 0; i < this->n; i++) out << "  " << i << " [label=\"" << i << "\"];\n";
-    for (const auto& e : this->edges) {
-      if (e.from < e.to) {
-        out << "  " << e.from << " -- " << e.to;
-        std::ostringstream opts;
-        if (e.cost != 1) opts << "label=\"" << e.cost << "\"";
-        if (opts.str().length() > 0) opts << ", ";
-        opts << "penwidth=2";
-        out << " [" << opts.str() << "];\n";
-      }
-    }
-    out << "}\n";
-    return out.str();
-  }
-  friend std::ostream& operator<<(std::ostream& os, const gomory_hu_result& g) {
-      return os << "[GomoryHu Tree Nodes=" << g.n << "]";
-  }
-};
-template <typename T>
-gomory_hu_result<T> gomory_hu(const undigraph<T>& g) {
-#else
 template <typename T>
 forest<T> gomory_hu(const undigraph<T>& g) {
-#endif
   int n = g.n;
   flow_graph<T> fg(n, 0, 1);
   for (auto& e : g.edges) {
@@ -51,10 +21,27 @@ forest<T> gomory_hu(const undigraph<T>& g) {
     }
     ret.add(i, pr[i], flow);
   }
-#ifdef GRACIE
-  return gomory_hu_result<T>(ret);
-#else
   return ret;
-#endif
-  // can be optimized by compressing components
 }
+
+#ifdef GRACIE
+template <typename T>
+std::string graphviz_gomory_hu(const forest<T>& f) {
+    std::ostringstream out;
+    out << "graph G {\n";
+    out << "  node [shape=circle, style=filled, fillcolor=lightblue];\n";
+    for (int i = 0; i < f.n; i++) out << "  " << i << " [label=\"" << i << "\"];\n";
+    for (const auto& e : f.edges) {
+        if (e.from < e.to) {
+            out << "  " << e.from << " -- " << e.to;
+            std::ostringstream opts;
+            if (e.cost != 1) opts << "label=\"" << e.cost << "\"";
+            if (opts.str().length() > 0) opts << ", ";
+            opts << "penwidth=2";
+            out << " [" << opts.str() << "];\n";
+        }
+    }
+    out << "}\n";
+    return out.str();
+}
+#endif

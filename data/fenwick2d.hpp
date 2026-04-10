@@ -39,29 +39,27 @@ class FenwickTree2D {
     }
     return v;
   }
+};
 
 #ifdef GRACIE
-  std::string graphviz() const {
+template <typename T>
+std::string graphviz(const FenwickTree2D<T>& f) {
     std::ostringstream os;
     os << "digraph G {\n  layout=dot;\n  node [shape=plaintext, fontsize=10];\n";
     os << "  st [label=<\n    <table border=\"0\" cellborder=\"1\" cellspacing=\"0\">\n";
     os << "      <tr><td bgcolor=\"#eeeeee\"><b>(x \\\\ y)</b></td>";
-    for (int j = 0; j < m; j++) os << "<td bgcolor=\"#eeeeee\"><b>" << j << "</b></td>";
+    for (int j = 0; j < f.m; j++) os << "<td bgcolor=\"#eeeeee\"><b>" << j << "</b></td>";
     os << "</tr>\n";
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < f.n; i++) {
         os << "      <tr><td bgcolor=\"#eeeeee\"><b>" << i << "</b></td>";
-        for (int j = 0; j < m; j++) {
+        for (int j = 0; j < f.m; j++) {
             os << "<td>";
-            _dbglib::gracie_safe_print(os, fenw[i][j]);
+            _dbglib::gracie_safe_print(os, f.fenw[i][j]);
             os << "</td>";
         }
         os << "</tr>\n";
     }
     os << "    </table>\n  >];\n}\n";
     return os.str();
-  }
-  friend std::ostream& operator<<(std::ostream& os, const FenwickTree2D& f2) {
-      return os << "[FenwickTree2D " << f2.n << "x" << f2.m << "]";
-  }
+}
 #endif
-};

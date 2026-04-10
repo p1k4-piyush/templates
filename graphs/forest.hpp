@@ -1,5 +1,4 @@
 
-//	https://github.com/the-tourist/algo/
 
 template <typename T>
 class forest : public graph<T> {

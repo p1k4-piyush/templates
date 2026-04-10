@@ -77,32 +77,23 @@ class dinic {
     return g.flow;
   }
 
-#ifdef GRACIE
-  struct dinic_result : public vector<bool> {
-    flow_graph<T>& g;
-    dinic_result(const vector<bool>& v, flow_graph<T>& g_) : vector<bool>(v), g(g_) {}
-    
-    std::string graphviz() const {
-      std::vector<int> cut_nodes;
-      for (size_t i = 0; i < this->size(); i++) {
-        if ((*this)[i]) cut_nodes.push_back(i);
-      }
-      return g.graphviz(cut_nodes, true);
-    }
-  };
-  dinic_result min_cut() {
-#else
   vector<bool> min_cut() {
-#endif
     max_flow();
     vector<bool> ret(g.n);
     for (int i = 0; i < g.n; i++) {
       ret[i] = (d[i] != -1);
     }
-#ifdef GRACIE
-    return dinic_result(ret, g);
-#else
     return ret;
-#endif
   }
 };
+
+#ifdef GRACIE
+template <typename T>
+std::string graphviz_dinic(const dinic<T>& alg, const std::vector<bool>& res) {
+    std::vector<int> cut_nodes;
+    for (size_t i = 0; i < res.size(); i++) {
+        if (res[i]) cut_nodes.push_back(i);
+    }
+    return graphviz(alg.g, cut_nodes, true);
+}
+#endif

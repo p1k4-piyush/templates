@@ -1,5 +1,4 @@
 
-//	https://github.com/the-tourist/algo/
 
 const int MOD = 998244353;
 

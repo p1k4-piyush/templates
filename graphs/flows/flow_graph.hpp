@@ -40,27 +40,30 @@ class flow_graph {
     return id;
   }
 
+};
+
 #ifdef GRACIE
-  std::string graphviz(const std::vector<int>& mincut = {}, bool simplify = true) const {
+template <typename T>
+std::string graphviz(const flow_graph<T>& fg, const std::vector<int>& mincut = {}, bool simplify = true) {
     std::ostringstream out;
     out << "digraph G {\n";
     out << "  rankdir=LR;\n";
     out << "  node [shape=circle];\n";
     
-    std::vector<bool> in_cut(n, false);
+    std::vector<bool> in_cut(fg.n, false);
     for(int v : mincut) in_cut[v] = true;
 
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < fg.n; i++) {
         out << "  " << i << " [label=\"" << i << "\"";
-        if (i == st) out << ", style=filled, fillcolor=lightgreen";
-        else if (i == fin) out << ", style=filled, fillcolor=lightcoral";
+        if (i == fg.st) out << ", style=filled, fillcolor=lightgreen";
+        else if (i == fg.fin) out << ", style=filled, fillcolor=lightcoral";
         else if (in_cut[i]) out << ", style=filled, fillcolor=yellow";
         out << "];\n";
     }
 
-    for (int id = 0; id < (int)edges.size(); id += 2) {
-        const auto& e = edges[id];
-        const auto& back = edges[id ^ 1];
+    for (int id = 0; id < (int)fg.edges.size(); id += 2) {
+        const auto& e = fg.edges[id];
+        const auto& back = fg.edges[id ^ 1];
         if (simplify && e.c == 0 && back.c == 0) continue; 
         
         bool is_cut = in_cut[e.from] && !in_cut[e.to] && e.c > 0;
@@ -75,9 +78,5 @@ class flow_graph {
     }
     out << "}\n";
     return out.str();
-  }
-  friend std::ostream& operator<<(std::ostream& os, const flow_graph& fg) {
-      return os << "[FlowGraph n=" << fg.n << " st=" << fg.st << " fin=" << fg.fin << "]";
-  }
+}
 #endif
-};

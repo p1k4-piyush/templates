@@ -1,40 +1,5 @@
-#ifdef GRACIE
-template <typename T>
-struct blossom_result : public vector<int> {
-  const undigraph<T>& g;
-  blossom_result(const vector<int>& m, const undigraph<T>& g_) : vector<int>(m), g(g_) {}
-  
-  std::string graphviz() const {
-    std::ostringstream out;
-    out << "graph G {\n";
-    out << "  node [shape=circle];\n";
-    for (int i = 0; i < g.n; i++) {
-        out << "  " << i << " [label=\"" << i << "\"];\n";
-    }
-    std::set<std::pair<int, int>> drawn;
-    for (int i = 0; i < g.n; i++) {
-        for (int id : g.g[i]) {
-            const auto& e = g.edges[id];
-            int u = e.from ^ e.to ^ i;
-            if (i < u) {
-                bool active = ((*this)[i] == u);
-                out << "  " << i << " -- " << u;
-                if (active) out << " [color=blue, penwidth=2]";
-                else out << " [style=dotted, color=gray]";
-                out << ";\n";
-            }
-        }
-    }
-    out << "}\n";
-    return out.str();
-  }
-};
-template <typename T>
-blossom_result<T> find_max_unweighted_matching(const undigraph<T>& g) {
-#else
 template <typename T>
 vector<int> find_max_unweighted_matching(const undigraph<T>& g) {
-#endif
   vector<int> mate(g.n, -1);
   vector<int> label(g.n);
   vector<int> parent(g.n);
@@ -138,9 +103,33 @@ vector<int> find_max_unweighted_matching(const undigraph<T>& g) {
       bfs(i);
     }
   }
-#ifdef GRACIE
-  return blossom_result<T>(mate, g);
-#else
   return mate;
-#endif
 }
+
+#ifdef GRACIE
+template <typename T>
+std::string graphviz_blossom(const undigraph<T>& g, const std::vector<int>& mate) {
+    std::ostringstream out;
+    out << "graph G {\n";
+    out << "  node [shape=circle];\n";
+    for (int i = 0; i < g.n; i++) {
+        out << "  " << i << " [label=\"" << i << "\"];\n";
+    }
+    std::set<std::pair<int, int>> drawn;
+    for (int i = 0; i < g.n; i++) {
+        for (int id : g.g[i]) {
+            const auto& e = g.edges[id];
+            int u = e.from ^ e.to ^ i;
+            if (i < u) {
+                bool active = (mate[i] == u);
+                out << "  " << i << " -- " << u;
+                if (active) out << " [color=blue, penwidth=2]";
+                else out << " [style=dotted, color=gray]";
+                out << ";\n";
+            }
+        }
+    }
+    out << "}\n";
+    return out.str();
+}
+#endif

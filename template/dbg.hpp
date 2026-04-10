@@ -282,9 +282,29 @@ inline std::string save_graph_and_open(int line, std::string const& gv)
 
 
 template <typename U>
+concept has_adl_graphviz = requires(U const& x) { graphviz(x); };
+
+template <typename U>
 void debug_print_with_graph(std::ostream& os, int line, U const& v, bool styled, int d = 0)
 {
-    if constexpr (requires { v.graphviz(); }) {
+    if constexpr (has_adl_graphviz<U>) {
+        using R = decltype(graphviz(v));
+        std::string s;
+        if constexpr (std::is_convertible_v<R, std::string>) {
+            s = graphviz(v);
+        } else if constexpr (std::is_convertible_v<R, std::string_view>) {
+            s = std::string(graphviz(v));
+        } else if constexpr (std::is_convertible_v<R, const char*>) {
+            s = std::string(graphviz(v));
+        } else {
+            std::ostringstream tmp;
+            tmp << graphviz(v);
+            s = tmp.str();
+        }
+        auto png = save_graph_and_open(line, s);
+        os << S(GREEN) << "<graphviz:" << png << ">" << S();
+        return;
+    } else if constexpr (requires { v.graphviz(); }) {
         using R = decltype(v.graphviz());
         std::string s;
         if constexpr (std::is_convertible_v<R, std::string>) {

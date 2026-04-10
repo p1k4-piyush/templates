@@ -1,5 +1,4 @@
 
-//	https://github.com/the-tourist/algo/
 
 const double eps = 1e-9;
 

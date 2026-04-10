@@ -1,6 +1,3 @@
-
-//  https://github.com/the-tourist/algo/blob/master/segtree/info.cpp
-
 struct Info {
     int cur;
 

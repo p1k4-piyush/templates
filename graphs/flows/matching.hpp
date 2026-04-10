@@ -42,39 +42,7 @@ class matching {
     return false;
   }
 
-#ifdef GRACIE
-  std::string graphviz() const {
-    std::ostringstream out;
-    out << "graph G {\n";
-    out << "  rankdir=LR;\n";
-    out << "  node [shape=circle];\n";
-    out << "  subgraph cluster_L {\n";
-    out << "    label=\"Left (0.." << n - 1 << ")\";\n";
-    for (int i = 0; i < n; i++) out << "    L" << i << " [label=\"L" << i << "\"];\n";
-    out << "  }\n";
-    out << "  subgraph cluster_R {\n";
-    out << "    label=\"Right (0.." << m - 1 << ")\";\n";
-    for (int j = 0; j < m; j++) out << "    R" << j << " [label=\"R" << j << "\"];\n";
-    out << "  }\n";
-    std::set<std::pair<int, int>> drawn;
-    for (int i = 0; i < n; i++) {
-      for (int u : g[i]) {
-        if (drawn.insert({i, u}).second) {
-          bool active = (pa[i] == u);
-          out << "  L" << i << " -- R" << u;
-          if (active) out << " [color=blue, penwidth=2]";
-          else out << " [style=dotted, color=gray]";
-          out << ";\n";
-        }
-      }
-    }
-    out << "}\n";
-    return out.str();
-  }
-  friend std::ostream& operator<<(std::ostream& os, const matching& r) {
-      return os << "Max Match: " << r.res;
-  }
-#endif
+
   int solve() {
     mt19937_64 rng(uint32_t(chrono::steady_clock::now().time_since_epoch().count()));
     for (int i = 0; i < n; i++) {
@@ -104,3 +72,34 @@ class matching {
     return (int) dfs(v);
   }
 };
+
+#ifdef GRACIE
+inline std::string graphviz(const matching& r) {
+    std::ostringstream out;
+    out << "graph G {\n";
+    out << "  rankdir=LR;\n";
+    out << "  node [shape=circle];\n";
+    out << "  subgraph cluster_L {\n";
+    out << "    label=\"Left (0.." << r.n - 1 << ")\";\n";
+    for (int i = 0; i < r.n; i++) out << "    L" << i << " [label=\"L" << i << "\"];\n";
+    out << "  }\n";
+    out << "  subgraph cluster_R {\n";
+    out << "    label=\"Right (0.." << r.m - 1 << ")\";\n";
+    for (int j = 0; j < r.m; j++) out << "    R" << j << " [label=\"R" << j << "\"];\n";
+    out << "  }\n";
+    std::set<std::pair<int, int>> drawn;
+    for (int i = 0; i < r.n; i++) {
+        for (int u : r.g[i]) {
+            if (drawn.insert({i, u}).second) {
+                bool active = (r.pa[i] == u);
+                out << "  L" << i << " -- R" << u;
+                if (active) out << " [color=blue, penwidth=2]";
+                else out << " [style=dotted, color=gray]";
+                out << ";\n";
+            }
+        }
+    }
+    out << "}\n";
+    return out.str();
+}
+#endif

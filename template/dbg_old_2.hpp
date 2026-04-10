@@ -1,5 +1,4 @@
 
-//	https://github.com/the-tourist/algo/
 
 template <typename A, typename B>
 string to_string(pair<A, B> p);

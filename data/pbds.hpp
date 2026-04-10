@@ -1,5 +1,4 @@
 
-//  https://github.com/the-tourist/algo/blob/master/data/pbds.cpp
 
 #include <ext/pb_ds/assoc_container.hpp>
 

@@ -151,53 +151,44 @@ class fastflow {
     return flow;
   }
 
+  vector<bool> min_cut() {
+    max_flow();
+    vector<bool> ret(n);
+    for (int i = 0; i < n; i++) {
+        ret[i] = (d[i] != n);
+    }
+    return ret;
+  }
+};
+
 #ifdef GRACIE
-  struct fastflow_result : public vector<bool> {
-    fastflow<T>& g;
-    fastflow_result(const vector<bool>& v, fastflow<T>& g_) : vector<bool>(v), g(g_) {}
-    std::string graphviz(bool simplify = true) const {
-      std::ostringstream out;
-      out << "digraph G {\n";
-      out << "  rankdir=LR;\n";
-      out << "  node [shape=circle];\n";
-      for (int i = 0; i < g.n; i++) {
+template <typename T>
+std::string graphviz_fastflow(const fastflow<T>& g, const std::vector<bool>& res, bool simplify = true) {
+    std::ostringstream out;
+    out << "digraph G {\n";
+    out << "  rankdir=LR;\n";
+    out << "  node [shape=circle];\n";
+    for (int i = 0; i < g.n; i++) {
         out << "  " << i << " [label=\"" << i << " (d=" << (g.d[i] < g.n ? std::to_string(g.d[i]) : "inf") << ")\"";
         if (i == g.st) out << ", style=filled, fillcolor=lightgreen";
         else if (i == g.fin) out << ", style=filled, fillcolor=lightcoral";
-        else if ((*this)[i]) out << ", style=filled, fillcolor=yellow";
+        else if (res[i]) out << ", style=filled, fillcolor=yellow";
         out << "];\n";
-      }
-      for (int i = 0; i < g.n; i++) {
+    }
+    for (int i = 0; i < g.n; i++) {
         for (const auto& e : g.g[i]) {
-          if (e.c > 0) {
-            bool is_cut = (*this)[i] && !(*this)[e.to];
-            out << "  " << i << " -> " << e.to << " [label=\"" << e.f << " / " << e.c << "\"";
-            if (e.f > 0) out << ", color=blue, penwidth=2";
-            if (is_cut) out << ", color=red, style=dashed, penwidth=2";
-            out << "];\n";
-          } else if (!simplify) {
-            out << "  " << i << " -> " << e.to << " [label=\"" << e.f << " / " << e.c << "\", style=dotted];\n";
-          }
+            if (e.c > 0) {
+                bool is_cut = res[i] && !res[e.to];
+                out << "  " << i << " -> " << e.to << " [label=\"" << e.f << " / " << e.c << "\"";
+                if (e.f > 0) out << ", color=blue, penwidth=2";
+                if (is_cut) out << ", color=red, style=dashed, penwidth=2";
+                out << "];\n";
+            } else if (!simplify) {
+                out << "  " << i << " -> " << e.to << " [label=\"" << e.f << " / " << e.c << "\", style=dotted];\n";
+            }
         }
-      }
-      out << "}\n";
-      return out.str();
     }
-  };
-  fastflow_result min_cut() {
-#else
-  vector<bool> min_cut() {
+    out << "}\n";
+    return out.str();
+}
 #endif
-    max_flow();
-    assert(!expath());
-    vector<bool> ret(n);
-    for (int i = 0; i < n; i++) {
-      ret[i] = (d[i] != n);
-    }
-#ifdef GRACIE
-    return fastflow_result(ret, *this);
-#else
-    return ret;
-#endif
-  }
-};

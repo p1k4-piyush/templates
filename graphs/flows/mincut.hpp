@@ -1,49 +1,6 @@
-#ifdef GRACIE
-template <typename T>
-struct mincut_result : public pair<T, vector<bool>> {
-    vector<vector<T>> orig_g;
-    mincut_result(const pair<T, vector<bool>>& p, const vector<vector<T>>& g) : pair<T, vector<bool>>(p), orig_g(g) {}
-
-    friend std::ostream& operator<<(std::ostream& os, const mincut_result& m) {
-        os << "(cost: " << m.first << ", cut: [";
-        for (bool b : m.second) os << b << ",";
-        return os << "])";
-    }
-
-    std::string graphviz() const {
-        std::ostringstream out;
-        int n = orig_g.size();
-        out << "graph G {\n";
-        out << "  node [shape=circle];\n";
-        for (int i = 0; i < n; i++) {
-            out << "  " << i << " [label=\"" << i << "\"";
-            if (this->second[i]) out << ", style=filled, fillcolor=yellow";
-            out << "];\n";
-        }
-        for (int i = 0; i < n; i++) {
-            for (int j = i + 1; j < n; j++) {
-                if (orig_g[i][j] > 0) {
-                    bool is_cut = (this->second[i] != this->second[j]);
-                    out << "  " << i << " -- " << j << " [label=\"" << orig_g[i][j] << "\"";
-                    if (is_cut) out << ", color=red, style=dashed, penwidth=2";
-                    out << "];\n";
-                }
-            }
-        }
-        out << "}\n";
-        return out.str();
-    }
-};
-template <typename T>
-mincut_result<T> MinCut(vector<vector<T>> g) {
-#else
 template <typename T>
 pair<T, vector<bool>> MinCut(vector<vector<T>> g) {
-#endif
   int n = static_cast<int>(g.size());
-#ifdef GRACIE
-  vector<vector<T>> orig_g = g;
-#endif
   for (int i = 0; i < n; i++) {
     assert(static_cast<int>(g[i].size()) == n);
   }
@@ -92,9 +49,32 @@ pair<T, vector<bool>> MinCut(vector<vector<T>> g) {
       prev = sel;
     }
   }
-#ifdef GRACIE
-  return mincut_result<T>(make_pair(best_cost, best_cut), orig_g);
-#else
   return make_pair(best_cost, best_cut);
-#endif
 }
+
+#ifdef GRACIE
+template <typename T>
+std::string graphviz_mincut(const std::vector<std::vector<T>>& orig_g, const std::pair<T, std::vector<bool>>& m) {
+    std::ostringstream out;
+    int n = orig_g.size();
+    out << "graph G {\n";
+    out << "  node [shape=circle];\n";
+    for (int i = 0; i < n; i++) {
+        out << "  " << i << " [label=\"" << i << "\"";
+        if (m.second[i]) out << ", style=filled, fillcolor=yellow";
+        out << "];\n";
+    }
+    for (int i = 0; i < n; i++) {
+        for (int j = i + 1; j < n; j++) {
+            if (orig_g[i][j] > 0) {
+                bool is_cut = (m.second[i] != m.second[j]);
+                out << "  " << i << " -- " << j << " [label=\"" << orig_g[i][j] << "\"";
+                if (is_cut) out << ", color=red, style=dashed, penwidth=2";
+                out << "];\n";
+            }
+        }
+    }
+    out << "}\n";
+    return out.str();
+}
+#endif

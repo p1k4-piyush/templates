@@ -1,49 +1,7 @@
 
-//	https://github.com/the-tourist/algo/
-
-#ifdef GRACIE
-template <typename T>
-struct cycles_result : public vector<vector<int>> {
-    const graph<T>& g;
-    cycles_result(const vector<vector<int>>& res, const graph<T>& _g) : vector<vector<int>>(res), g(_g) {}
-    
-    std::string graphviz() const {
-        std::ostringstream out;
-        out << "graph G {\n";
-        out << "  layout=neato;\n";
-        out << "  node [shape=circle, style=filled, fillcolor=\"#F0F8FF\"];\n";
-        for (int i = 0; i < g.n; i++) {
-            out << "  " << i << " [label=\"" << i << "\"];\n";
-        }
-        vector<string> colors = {"red", "green", "blue", "magenta", "orange", "purple", "brown", "cyan"};
-        std::map<int, string> cycle_edge_colors;
-        int color_idx = 0;
-        for (const auto& cycle : *this) {
-            string color = colors[color_idx % colors.size()];
-            for (int id : cycle) cycle_edge_colors[id] = color;
-            color_idx++;
-        }
-        for (int id = 0; id < (int)g.edges.size(); id++) {
-            auto& e = g.edges[id];
-            out << "  " << e.from << " -- " << e.to;
-            if (cycle_edge_colors.count(id)) out << " [color=" << cycle_edge_colors[id] << ", penwidth=2]";
-            out << ";\n";
-        }
-        out << "}\n";
-        return out.str();
-    }
-    friend std::ostream& operator<<(std::ostream& os, const cycles_result& c) {
-        return os << "[Cycles Found=" << c.size() << "]";
-    }
-};
-#endif
 
 template <typename T>
-#ifdef GRACIE
-cycles_result<T>
-#else
 vector<vector<int>>
-#endif
 find_cycles(const graph<T>& g, int bound_cnt = 1 << 30,
     int bound_size = 1 << 30)
 {
@@ -88,16 +46,54 @@ find_cycles(const graph<T>& g, int bound_cnt = 1 << 30,
             dfs(i, -1);
         }
     }
-#ifdef GRACIE
-    return cycles_result<T>(cycles, g);
-#else
     return cycles;
-#endif
-    // cycles are given by edge ids, all cycles are simple
-    // breaks after getting bound_cnt cycles or total_size >= bound_size
-    // digraph: finds at least one cycle in every connected component (if not broken)
-    // undigraph: finds cycle basis
 }
+
+#ifdef GRACIE
+template <typename T>
+std::string graphviz_cycles(const graph<T>& g, const std::vector<std::vector<int>>& cycles) {
+    std::ostringstream out;
+    out << "graph G {\n";
+    out << "  layout=neato;\n";
+    out << "  node [shape=circle, style=filled, fillcolor=\"#F0F8FF\"];\n";
+    for (int i = 0; i < g.n; i++) {
+        out << "  " << i << " [label=\"" << i << "\"];\n";
+    }
+    vector<string> colors = {"red", "green", "blue", "magenta", "orange", "purple", "brown", "cyan"};
+    std::map<int, vector<pair<int, string>>> cycle_edge_colors;
+    int color_idx = 0;
+    for (const auto& cycle : cycles) {
+        string color = colors[color_idx % colors.size()];
+        for (int id : cycle) cycle_edge_colors[id].push_back({color_idx, color});
+        color_idx++;
+    }
+    for (int id = 0; id < (int)g.edges.size(); id++) {
+        auto& e = g.edges[id];
+        out << "  " << e.from << " -- " << e.to;
+        if (cycle_edge_colors.count(id)) {
+            out << " [color=\"";
+            const auto& cols = cycle_edge_colors[id];
+            for (size_t i = 0; i < cols.size(); ++i) {
+                out << cols[i].second << (i + 1 == cols.size() ? "" : ":invis:");
+            }
+            out << "\", penwidth=2";
+            if (cols.size() > 3) {
+                out << ", label=<";
+                out << "<table border=\"0\" cellborder=\"1\" cellspacing=\"0\" cellpadding=\"1\" color=\"black\"><tr>";
+                for (size_t i = 0; i < cols.size(); ++i) {
+                    out << "<td bgcolor=\"white\"><font point-size=\"10\" color=\"" << cols[i].second << "\"><b>C" << cols[i].first << "</b></font></td>";
+                }
+                out << "</tr></table>";
+                out << ">";
+            }
+            out << "]";
+        }
+        out << ";\n";
+    }
+    out << "}\n";
+    return out.str();
+}
+#endif
 
 template <typename T>
 vector<int> edges_to_vertices(const graph<T>& g, const vector<int>& edge_cycle)

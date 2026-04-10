@@ -1,5 +1,4 @@
 
-//	https://github.com/the-tourist/algo/
 
 /* OLD:
 template <typename T>

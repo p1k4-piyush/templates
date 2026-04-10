@@ -72,43 +72,7 @@ class hungarian {
     return -v[m];
   }
 
-#ifdef GRACIE
-  std::string graphviz() const {
-    std::ostringstream out;
-    out << "graph G {\n";
-    out << "  rankdir=LR;\n";
-    out << "  node [shape=circle];\n";
-    out << "  subgraph cluster_L {\n";
-    out << "    label=\"Left (1..n)\";\n";
-    for (int i = 0; i < n; i++) out << "    L" << i << " [label=\"L" << i << " (u=" << u[i] << ")\"];\n";
-    out << "  }\n";
-    out << "  subgraph cluster_R {\n";
-    out << "    label=\"Right (1..m)\";\n";
-    for (int j = 0; j < m; j++) out << "    R" << j << " [label=\"R" << j << " (v=" << v[j] << ")\"];\n";
-    out << "  }\n";
-    for (int i = 0; i < n; i++) {
-      for (int j = 0; j < m; j++) {
-        out << "  L" << i << " -- R" << j;
-        std::ostringstream opts;
-        if (a[i][j] != 1) opts << "label=\"" << a[i][j] << "\"";
-        if (pa[i] == j) {
-            if (opts.str().length() > 0) opts << ", ";
-            opts << "color=red, penwidth=2";
-        } else {
-            if (opts.str().length() > 0) opts << ", ";
-            opts << "style=dotted, color=gray";
-        }
-        if (opts.str().length() > 0) out << " [" << opts.str() << "]";
-        out << ";\n";
-      }
-    }
-    out << "}\n";
-    return out.str();
-  }
-  friend std::ostream& operator<<(std::ostream& os, const hungarian& h) {
-      return os << "Current score: " << -h.v[h.m];
-  }
-#endif
+
   inline T solve() {
     for (int i = 0; i < n; i++) {
       add_row(i);
@@ -116,3 +80,39 @@ class hungarian {
     return current_score();
   }
 };
+
+#ifdef GRACIE
+template <typename T>
+std::string graphviz(const hungarian<T>& h) {
+    std::ostringstream out;
+    out << "graph G {\n";
+    out << "  rankdir=LR;\n";
+    out << "  node [shape=circle];\n";
+    out << "  subgraph cluster_L {\n";
+    out << "    label=\"Left (1..n)\";\n";
+    for (int i = 0; i < h.n; i++) out << "    L" << i << " [label=\"L" << i << " (u=" << h.u[i] << ")\"];\n";
+    out << "  }\n";
+    out << "  subgraph cluster_R {\n";
+    out << "    label=\"Right (1..m)\";\n";
+    for (int j = 0; j < h.m; j++) out << "    R" << j << " [label=\"R" << j << " (v=" << h.v[j] << ")\"];\n";
+    out << "  }\n";
+    for (int i = 0; i < h.n; i++) {
+        for (int j = 0; j < h.m; j++) {
+            out << "  L" << i << " -- R" << j;
+            std::ostringstream opts;
+            if (h.a[i][j] != 1) opts << "label=\"" << h.a[i][j] << "\"";
+            if (h.pa[i] == j) {
+                if (opts.str().length() > 0) opts << ", ";
+                opts << "color=red, penwidth=2";
+            } else {
+                if (opts.str().length() > 0) opts << ", ";
+                opts << "style=dotted, color=gray";
+            }
+            if (opts.str().length() > 0) out << " [" << opts.str() << "]";
+            out << ";\n";
+        }
+    }
+    out << "}\n";
+    return out.str();
+}
+#endif

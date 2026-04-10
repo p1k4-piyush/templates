@@ -1,5 +1,4 @@
 
-//	https://github.com/the-tourist/algo/blob/master/data/queue.cpp
 
 template <typename T, typename F>
 class Queue {

@@ -1,5 +1,4 @@
 
-//	https://github.com/the-tourist/algo/
 
 template <typename T>
 class lca_forest : public dfs_forest<T> {
