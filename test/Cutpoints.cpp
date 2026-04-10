@@ -2,7 +2,6 @@
 using namespace std;
 #include "../template/dbg.hpp"
 
-
 #include "../graphs/graph.hpp"
 #include "../graphs/undigraph.hpp"
 #include "../graphs/dfs_undigraph.hpp"

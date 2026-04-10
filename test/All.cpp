@@ -1,11 +1,4 @@
-#include <algorithm>
-#include <cstdlib>
-#include <filesystem>
-#include <fstream>
-#include <iostream>
-#include <regex>
-#include <string>
-#include <vector>
+#include "bits/stdc++.h"
 
 using namespace std;
 namespace fs = std::filesystem;

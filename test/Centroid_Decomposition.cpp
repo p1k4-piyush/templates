@@ -1,7 +1,6 @@
 #include "bits/stdc++.h"
 using namespace std;
 
-
 #include "../graphs/graph.hpp"
 #include "../graphs/forest.hpp"
 #include "../graphs/centroid.hpp"
