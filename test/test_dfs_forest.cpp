@@ -2,11 +2,12 @@
 using namespace std;
 #include "../template/dbg.hpp"
 
-#include "../graphs/graph.hpp"
-#include "../graphs/forest.hpp"
 #include "../graphs/dfs_forest.hpp"
+#include "../graphs/forest.hpp"
+#include "../graphs/graph.hpp"
 
-int main() {
+int main()
+{
     dfs_forest<int> g(15);
     mt19937 rng(1337);
     // Construct random forest/tree structure

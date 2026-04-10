@@ -123,22 +123,30 @@ public:
 
 #ifdef GRACIE
 template <typename T>
-std::string graphviz(const dfs_undigraph<T>& g, std::string mode = "dist") {
+std::string graphviz(const dfs_undigraph<T>& g, std::string mode = "dist")
+{
     std::ostringstream out;
     out << "graph G {\n";
     out << "  node [shape=box, style=rounded, fontsize=10, margin=\"0.05,0.05\"];\n";
     for (int i = 0; i < g.n; i++) {
         out << "  " << i << " [label=\"" << i;
         if (!g.pv.empty() && g.depth[i] != -1) {
-            if (mode == "dist") out << "\\ndist=" << g.dist[i];
-            else if (mode == "sz") out << "\\nsz=" << g.sz[i];
-            else if (mode == "depth") out << "\\ndepth=" << g.depth[i];
-            else if (mode == "pos") out << "\\npos=" << g.pos[i];
-            else if (mode == "min_depth") out << "\\nmin=" << g.min_depth[i];
+            if (mode == "dist")
+                out << "\\ndist=" << g.dist[i];
+            else if (mode == "sz")
+                out << "\\nsz=" << g.sz[i];
+            else if (mode == "depth")
+                out << "\\ndepth=" << g.depth[i];
+            else if (mode == "pos")
+                out << "\\npos=" << g.pos[i];
+            else if (mode == "min_depth")
+                out << "\\nmin=" << g.min_depth[i];
         }
         out << "\"";
-        if (!g.pv.empty() && g.depth[i] == 0) out << ", style=\"filled,rounded\", fillcolor=\"burlywood\"";
-        else if (!g.pv.empty() && g.sz[i] == 1) out << ", style=\"filled,rounded\", fillcolor=\"lightgreen\"";
+        if (!g.pv.empty() && g.depth[i] == 0)
+            out << ", style=\"filled,rounded\", fillcolor=\"burlywood\"";
+        else if (!g.pv.empty() && g.sz[i] == 1)
+            out << ", style=\"filled,rounded\", fillcolor=\"lightgreen\"";
         out << "];\n";
     }
     for (int id = 0; id < (int)g.edges.size(); id++) {

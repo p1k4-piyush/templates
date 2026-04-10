@@ -21,7 +21,8 @@ public:
 
     virtual int add(int from, int to, T cost) = 0;
 
-    virtual std::string graphviz(const std::vector<int>& path = {}, bool directed = true) const {
+    virtual std::string graphviz(const std::vector<int>& path = {}, bool directed = true) const
+    {
         return "";
     }
 
@@ -84,7 +85,8 @@ public:
             if (!attrs.empty()) {
                 os << " [";
                 for (size_t i = 0; i < attrs.size(); i++) {
-                    if (i > 0) os << ", ";
+                    if (i > 0)
+                        os << ", ";
                     os << attrs[i];
                 }
                 os << "]";
@@ -99,7 +101,8 @@ public:
 
 #ifdef GRACIE
 template <typename T>
-std::string graphviz(const graph<T>& gr) {
+std::string graphviz(const graph<T>& gr)
+{
     std::ostringstream out;
     out << (gr.directed() ? "digraph" : "graph") << " G {\n";
     out << "  node [shape=circle];\n";
@@ -108,7 +111,8 @@ std::string graphviz(const graph<T>& gr) {
     }
     for (const auto& e : gr.edges) {
         out << "  " << e.from << (gr.directed() ? " -> " : " -- ") << e.to;
-        if (e.cost != 1) out << " [label=\"" << e.cost << "\"]";
+        if (e.cost != 1)
+            out << " [label=\"" << e.cost << "\"]";
         out << ";\n";
     }
     out << "}\n";

@@ -46,11 +46,12 @@ vector<int> find_scc(const digraph<T>& g, int& cnt)
 }
 #ifdef GRACIE
 template <typename T>
-std::string graphviz_scc(const digraph<T>& g, const std::vector<int>& c) {
+std::string graphviz_scc(const digraph<T>& g, const std::vector<int>& c)
+{
     std::ostringstream out;
     out << "digraph G {\n";
     out << "  node [shape=circle];\n";
-    vector<string> colors = {"lightblue", "lightgreen", "lightcoral", "plum", "wheat", "khaki"};
+    vector<string> colors = { "lightblue", "lightgreen", "lightcoral", "plum", "wheat", "khaki" };
     for (int i = 0; i < g.n; i++) {
         int comp = c[i];
         string color = colors[comp % colors.size()];
@@ -70,4 +71,4 @@ std::string graphviz_scc(const digraph<T>& g, const std::vector<int>& c) {
     return out.str();
 }
 #endif
-    // c[i] <= c[j] for every edge i -> j
+// c[i] <= c[j] for every edge i -> j

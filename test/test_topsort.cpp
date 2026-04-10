@@ -2,11 +2,12 @@
 using namespace std;
 #include "../template/dbg.hpp"
 
-#include "../graphs/graph.hpp"
 #include "../graphs/digraph.hpp"
+#include "../graphs/graph.hpp"
 #include "../graphs/topsort.hpp"
 
-int main() {
+int main()
+{
     digraph<int> g(5);
     g.add(0, 1);
     g.add(0, 2);

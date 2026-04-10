@@ -28,17 +28,18 @@ public:
         int lg = 32 - __builtin_clz(to - from + 1) - 1;
         return func(mat[lg][from], mat[lg][to - (1 << lg) + 1]);
     }
-
 };
 
 #ifdef GRACIE
 template <typename T, typename F>
-std::string graphviz(const SparseTable<T, F>& st) {
+std::string graphviz(const SparseTable<T, F>& st)
+{
     std::ostringstream os;
     os << "digraph G {\n  node [shape=plaintext, fontsize=10];\n";
     os << "  st [label=<\n    <table border=\"0\" cellborder=\"1\" cellspacing=\"0\">\n";
     os << "      <tr><td bgcolor=\"#eeeeee\"><b>(lg \\\\ i)</b></td>";
-    for (int j = 0; j < st.n; j++) os << "<td bgcolor=\"#eeeeee\"><b>" << j << "</b></td>";
+    for (int j = 0; j < st.n; j++)
+        os << "<td bgcolor=\"#eeeeee\"><b>" << j << "</b></td>";
     os << "</tr>\n";
     for (int j = 0; j < (int)st.mat.size(); j++) {
         os << "      <tr><td bgcolor=\"#eeeeee\"><b>" << j << " (len " << (1 << j) << ")</b></td>";

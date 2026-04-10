@@ -61,4 +61,3 @@ vector<vector<T>> power(const vector<vector<T>>& a, const U& b)
     }
     return res;
 }
-

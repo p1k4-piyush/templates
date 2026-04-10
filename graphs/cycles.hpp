@@ -51,7 +51,8 @@ find_cycles(const graph<T>& g, int bound_cnt = 1 << 30,
 
 #ifdef GRACIE
 template <typename T>
-std::string graphviz_cycles(const graph<T>& g, const std::vector<std::vector<int>>& cycles) {
+std::string graphviz_cycles(const graph<T>& g, const std::vector<std::vector<int>>& cycles)
+{
     std::ostringstream out;
     out << "graph G {\n";
     out << "  layout=neato;\n";
@@ -59,12 +60,13 @@ std::string graphviz_cycles(const graph<T>& g, const std::vector<std::vector<int
     for (int i = 0; i < g.n; i++) {
         out << "  " << i << " [label=\"" << i << "\"];\n";
     }
-    vector<string> colors = {"red", "green", "blue", "magenta", "orange", "purple", "brown", "cyan"};
+    vector<string> colors = { "red", "green", "blue", "magenta", "orange", "purple", "brown", "cyan" };
     std::map<int, vector<pair<int, string>>> cycle_edge_colors;
     int color_idx = 0;
     for (const auto& cycle : cycles) {
         string color = colors[color_idx % colors.size()];
-        for (int id : cycle) cycle_edge_colors[id].push_back({color_idx, color});
+        for (int id : cycle)
+            cycle_edge_colors[id].push_back({ color_idx, color });
         color_idx++;
     }
     for (int id = 0; id < (int)g.edges.size(); id++) {

@@ -5,7 +5,8 @@ using namespace std;
 #include "../graphs/graph.hpp"
 #include "../graphs/undigraph.hpp"
 
-int main() {
+int main()
+{
     undigraph<int> g(5);
     g.add(0, 1, 2);
     g.add(1, 2, 3);

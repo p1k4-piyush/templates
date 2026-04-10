@@ -2,11 +2,12 @@
 using namespace std;
 #include "../template/dbg.hpp"
 
+#include "../graphs/eulerian.hpp"
 #include "../graphs/graph.hpp"
 #include "../graphs/undigraph.hpp"
-#include "../graphs/eulerian.hpp"
 
-int main() {
+int main()
+{
     undigraph<int> g(15);
     // Outer shell
     for (int i = 0; i < 15; i++) {
@@ -17,7 +18,7 @@ int main() {
         g.add(i, (i + 2) % 15);
     }
     // Cross bounds
-    for (int i = 0; i < 15; i+=3) {
+    for (int i = 0; i < 15; i += 3) {
         g.add(i, (i + 3) % 15);
     }
     int root;

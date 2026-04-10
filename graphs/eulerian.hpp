@@ -82,7 +82,8 @@ vector<int> find_eulerian_path(const graph<T>& g, int& root)
 
 #ifdef GRACIE
 template <typename T>
-std::string graphviz_eulerian(const graph<T>& g, const std::vector<int>& path, int root) {
+std::string graphviz_eulerian(const graph<T>& g, const std::vector<int>& path, int root)
+{
     std::ostringstream out;
     out << "digraph G {\n";
     out << "  layout=neato;\n";
@@ -91,7 +92,8 @@ std::string graphviz_eulerian(const graph<T>& g, const std::vector<int>& path, i
     out << "  node [shape=circle, style=filled, fillcolor=\"#F0F8FF\"];\n";
     for (int i = 0; i < g.n; i++) {
         out << "  " << i << " [label=\"" << i << "\"";
-        if (i == root) out << ", style=filled, fillcolor=lightgreen";
+        if (i == root)
+            out << ", style=filled, fillcolor=lightgreen";
         out << "];\n";
     }
     vector<int> edge_order(g.edges.size(), -1);
@@ -105,7 +107,8 @@ std::string graphviz_eulerian(const graph<T>& g, const std::vector<int>& path, i
             out << edge_order[id];
         }
         out << "\"";
-        if (edge_order[id] != -1) out << ", fontsize=16, arrowsize=0.5";
+        if (edge_order[id] != -1)
+            out << ", fontsize=16, arrowsize=0.5";
         out << "];\n";
     }
     out << "}\n";

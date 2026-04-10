@@ -34,18 +34,18 @@ public:
         int p = bit_width(unsigned(l ^ (r - 1))) - 1;
         return func(mat[p][l], mat[p][r - 1]);
     }
-
-
 };
 
 #ifdef GRACIE
 template <typename T, typename F>
-std::string graphviz(const DisjointSparseTable<T, F>& dt) {
+std::string graphviz(const DisjointSparseTable<T, F>& dt)
+{
     std::ostringstream os;
     os << "digraph G {\n  node [shape=plaintext, fontsize=10];\n";
     os << "  st [label=<\n    <table border=\"0\" cellborder=\"1\" cellspacing=\"0\">\n";
     os << "      <tr><td bgcolor=\"#eeeeee\"><b>(p \\\\ i)</b></td>";
-    for (int j = 0; j < dt.n; j++) os << "<td bgcolor=\"#eeeeee\"><b>" << j << "</b></td>";
+    for (int j = 0; j < dt.n; j++)
+        os << "<td bgcolor=\"#eeeeee\"><b>" << j << "</b></td>";
     os << "</tr>\n";
     for (int p_ind = 0; p_ind < (int)dt.mat.size(); p_ind++) {
         os << "      <tr><td bgcolor=\"#eeeeee\"><b>" << p_ind << " (lvl " << (1 << p_ind) << ")</b></td>";

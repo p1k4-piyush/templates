@@ -15,7 +15,8 @@ vector<bool> find_bridges(dfs_undigraph<T>& g)
 
 #ifdef GRACIE
 template <typename T>
-std::string graphviz_bridges(const dfs_undigraph<T>& g, const std::vector<bool>& bridge) {
+std::string graphviz_bridges(const dfs_undigraph<T>& g, const std::vector<bool>& bridge)
+{
     std::ostringstream out;
     out << "graph G {\n";
     out << "  layout=neato;\n";

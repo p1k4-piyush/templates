@@ -25,25 +25,26 @@ public:
         }
         return false;
     }
-
 };
 
 #ifdef GRACIE
-inline std::string graphviz(const dsu& d) {
+inline std::string graphviz(const dsu& d)
+{
     std::ostringstream out;
     out << "digraph G {\n";
     out << "  node [shape=circle, margin=0.03, fontsize=10];\n";
-    
+
     std::map<int, std::string> root_colors;
-    const std::string colors[] = { 
-        "firebrick", "dodgerblue", "forestgreen", "darkorchid", "darkorange", 
-        "deeppink", "saddlebrown", "teal", "navy", "crimson", "purple", "seagreen" 
+    const std::string colors[] = {
+        "firebrick", "dodgerblue", "forestgreen", "darkorchid", "darkorange",
+        "deeppink", "saddlebrown", "teal", "navy", "crimson", "purple", "seagreen"
     };
     int color_idx = 0;
-    
+
     auto get_root = [&](int x) {
         int temp = x;
-        while (temp != d.p[temp]) temp = d.p[temp];
+        while (temp != d.p[temp])
+            temp = d.p[temp];
         return temp;
     };
 
@@ -54,7 +55,7 @@ inline std::string graphviz(const dsu& d) {
             color_idx++;
         }
     }
-    
+
     for (int i = 0; i < d.n; i++) {
         int r = get_root(i);
         out << "  " << i << " [penwidth=2];\n"; // keep node black

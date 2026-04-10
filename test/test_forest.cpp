@@ -2,10 +2,11 @@
 using namespace std;
 #include "../template/dbg.hpp"
 
-#include "../graphs/graph.hpp"
 #include "../graphs/forest.hpp"
+#include "../graphs/graph.hpp"
 
-int main() {
+int main()
+{
     forest<int> g(6);
     g.add(0, 1, 1);
     g.add(1, 2, 2);

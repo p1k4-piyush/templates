@@ -1,6 +1,5 @@
 
 
-
 template <typename T>
 vector<int> find_mst(const undigraph<T>& g, T& ans)
 {
@@ -23,7 +22,8 @@ vector<int> find_mst(const undigraph<T>& g, T& ans)
 }
 #ifdef GRACIE
 template <typename T>
-std::string graphviz_mst(const undigraph<T>& g, const std::vector<int>& mst_list) {
+std::string graphviz_mst(const undigraph<T>& g, const std::vector<int>& mst_list)
+{
     std::ostringstream out;
     out << "graph G {\n";
     out << "  layout=neato;\n";
@@ -36,16 +36,19 @@ std::string graphviz_mst(const undigraph<T>& g, const std::vector<int>& mst_list
         auto& e = g.edges[id];
         out << "  " << e.from << " -- " << e.to;
         std::ostringstream opts;
-        if (e.cost != 1) opts << "label=\"" << e.cost << "\"";
+        if (e.cost != 1)
+            opts << "label=\"" << e.cost << "\"";
         if (mst_edges.count(id)) {
-            if (opts.str().length() > 0) opts << ", ";
+            if (opts.str().length() > 0)
+                opts << ", ";
             opts << "color=\"red\", penwidth=2";
         }
-        if (opts.str().length() > 0) out << " [" << opts.str() << "]";
+        if (opts.str().length() > 0)
+            out << " [" << opts.str() << "]";
         out << ";\n";
     }
     out << "}\n";
     return out.str();
 }
 #endif
-    // returns edge ids of minimum "spanning" forest
+// returns edge ids of minimum "spanning" forest

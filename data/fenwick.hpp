@@ -54,21 +54,21 @@ public:
         assert(0 <= at && at <= n);
         return at;
     }
-
 };
 
 #ifdef GRACIE
 template <typename T>
-std::string graphviz(const FenwickTree<T>& f) {
+std::string graphviz(const FenwickTree<T>& f)
+{
     std::ostringstream out;
     out << "digraph G {\n";
     out << "  layout=dot;\n";
     out << "  node [shape=box];\n";
-    
+
     for (int i = 0; i < f.n; i++) {
         out << "  L" << i << " [shape=none, margin=0, label=<<table border=\"0\" cellborder=\"1\" cellspacing=\"0\" cellpadding=\"4\"><tr><td bgcolor=\"#F0F8FF\">[" << i << "]</td></tr></table>>];\n";
     }
-    
+
     for (int i = 0; i < f.n; i++) {
         out << "  F" << i << " [shape=none, margin=0, label=<<table border=\"0\" cellborder=\"1\" cellspacing=\"0\" cellpadding=\"4\">";
         int start = i & (i + 1);
@@ -78,12 +78,12 @@ std::string graphviz(const FenwickTree<T>& f) {
         } else {
             out << "<tr><td bgcolor=\"#FFDAB9\">[" << start << ".." << end << "]</td></tr>";
         }
-        out << "<tr><td bgcolor=\"#FFFFE0\">"; 
-        _dbglib::gracie_safe_print(out, f.fenw[i]); 
+        out << "<tr><td bgcolor=\"#FFFFE0\">";
+        _dbglib::gracie_safe_print(out, f.fenw[i]);
         out << "</td></tr></table>>];\n";
-        
+
         out << "  F" << i << " -> L" << i << " [color=blue];\n";
-        
+
         int V = i + 1;
         int lowest_bit = V & -V;
         for (int step = 1; step < lowest_bit; step <<= 1) {
@@ -91,7 +91,7 @@ std::string graphviz(const FenwickTree<T>& f) {
             out << "  F" << i << " -> F" << (child_V - 1) << " [color=blue];\n";
         }
     }
-    
+
     out << "}\n";
     return out.str();
 }

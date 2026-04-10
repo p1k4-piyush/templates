@@ -78,7 +78,8 @@ concept has_gracie_print = requires(const T& x) { x.print(); };
 template <typename T>
 concept has_gracie_to_string = requires(const T& x) { x.to_string(); };
 
-inline void gracie_safe_print(std::ostream& os, const auto& x, int depth = 0) {
+inline void gracie_safe_print(std::ostream& os, const auto& x, int depth = 0)
+{
     using T = std::remove_cvref_t<decltype(x)>;
     if constexpr (has_gracie_ostream<T>) {
         os << x;
@@ -90,17 +91,19 @@ inline void gracie_safe_print(std::ostream& os, const auto& x, int depth = 0) {
         os << "{";
         bool first = true;
         for (const auto& i : x) {
-            if (!first) os << ", ";
+            if (!first)
+                os << ", ";
             first = false;
             gracie_safe_print(os, i, depth + 1);
         }
         os << "}";
-    } else if constexpr (requires { std::tuple_size<T>{}; }) {
+    } else if constexpr (requires { std::tuple_size<T> {}; }) {
         os << "(";
         std::apply([&](auto const&... xs) {
             int f = 0;
             ((os << (f++ ? ", " : ""), gracie_safe_print(os, xs, depth + 1)), ...);
-        }, x);
+        },
+            x);
         os << ")";
     } else {
         os << "[Struct]";
@@ -280,7 +283,6 @@ inline std::string save_graph_and_open(int line, std::string const& gv)
     return pngname;
 }
 
-
 template <typename U>
 concept has_adl_graphviz = requires(U const& x) { graphviz(x); };
 
@@ -329,18 +331,19 @@ void debug_print_with_graph(std::ostream& os, int line, U const& v, bool styled,
         // Strict boundary validation to strictly avoid blindly catching conversational "test digraph" titles!
         std::string h(s);
         std::transform(h.begin(), h.end(), h.begin(), [](unsigned char c) { return std::tolower(c); });
-        
+
         // Strip leading whitespace
         size_t start = h.find_first_not_of(" \t\n\r");
-        if (start == std::string::npos) return false;
+        if (start == std::string::npos)
+            return false;
         h = h.substr(start);
-        
+
         if (s.find('{') == std::string::npos || s.find('}') == std::string::npos)
             return false;
-            
+
         if (h.starts_with("digraph") || h.starts_with("strict digraph") || h.starts_with("graph ") || h.starts_with("strict graph"))
             return true;
-            
+
         return false;
     };
 

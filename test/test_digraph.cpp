@@ -2,10 +2,11 @@
 using namespace std;
 #include "../template/dbg.hpp"
 
-#include "../graphs/graph.hpp"
 #include "../graphs/digraph.hpp"
+#include "../graphs/graph.hpp"
 
-int main() {
+int main()
+{
     digraph<int> g(4);
     g.add(0, 1, 1);
     g.add(1, 2, 2);

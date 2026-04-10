@@ -31,7 +31,8 @@ vector<int> find_topsort(const digraph<T>& g)
 
 #ifdef GRACIE
 template <typename T>
-std::string graphviz_topsort(const digraph<T>& g, const std::vector<int>& order) {
+std::string graphviz_topsort(const digraph<T>& g, const std::vector<int>& order)
+{
     std::ostringstream out;
     out << "digraph G {\n";
     out << "  rankdir=LR;\n";
@@ -42,8 +43,10 @@ std::string graphviz_topsort(const digraph<T>& g, const std::vector<int>& order)
     }
     for (int i = 0; i < g.n; i++) {
         out << "  " << i << " [label=\"" << i;
-        if (rank[i] != -1) out << "\\n(Order " << rank[i] << ")\", style=filled, fillcolor=lightgreen";
-        else out << "\", style=filled, fillcolor=gray";
+        if (rank[i] != -1)
+            out << "\\n(Order " << rank[i] << ")\", style=filled, fillcolor=lightgreen";
+        else
+            out << "\", style=filled, fillcolor=gray";
         out << "];\n";
     }
     for (int i = 0; i < g.n; i++) {

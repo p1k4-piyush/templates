@@ -26,7 +26,8 @@ vector<bool> find_cutpoints(dfs_undigraph<T>& g)
 
 #ifdef GRACIE
 template <typename T>
-std::string graphviz_cutpoints(const dfs_undigraph<T>& g, const std::vector<bool>& cutpoint) {
+std::string graphviz_cutpoints(const dfs_undigraph<T>& g, const std::vector<bool>& cutpoint)
+{
     std::ostringstream out;
     out << "graph G {\n";
     out << "  layout=neato;\n";
