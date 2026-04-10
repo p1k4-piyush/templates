@@ -118,7 +118,7 @@ std::string graphviz_centroid(const forest<T>& g, const std::vector<int>& res)
         }
     }
     for (auto const& e : g.edges) {
-        os << "  " << e.from << " -> " << e.to << " [style=dotted, color=gray, dir=none, constraint=false];\n";
+        os << "  " << e.from << " -> " << e.to << " [style=\"dotted\", color=\"gray30\", penwidth=2.0, dir=none, constraint=false];\n";
     }
     os << "}\n";
     return os.str();

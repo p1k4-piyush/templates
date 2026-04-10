@@ -1,0 +1,32 @@
+graph G {
+  node [shape=box, style=rounded, fontsize=10, margin="0.05,0.05"];
+  0 [label="0\ndist=0", style="filled,rounded", fillcolor="burlywood"];
+  1 [label="1\ndist=1"];
+  2 [label="2\ndist=2"];
+  3 [label="3\ndist=2", style="filled,rounded", fillcolor="lightgreen"];
+  4 [label="4\ndist=1"];
+  5 [label="5\ndist=1", style="filled,rounded", fillcolor="lightgreen"];
+  6 [label="6\ndist=2"];
+  7 [label="7\ndist=3", style="filled,rounded", fillcolor="lightgreen"];
+  8 [label="8\ndist=3"];
+  9 [label="9\ndist=3"];
+  10 [label="10\ndist=2", style="filled,rounded", fillcolor="lightgreen"];
+  11 [label="11\ndist=4", style="filled,rounded", fillcolor="lightgreen"];
+  12 [label="12\ndist=4", style="filled,rounded", fillcolor="lightgreen"];
+  13 [label="13\ndist=3", style="filled,rounded", fillcolor="lightgreen"];
+  14 [label="14\ndist=3", style="filled,rounded", fillcolor="lightgreen"];
+  0 -- 1 [penwidth=2];
+  1 -- 2 [penwidth=2];
+  1 -- 3 [penwidth=2];
+  0 -- 4 [penwidth=2];
+  0 -- 5 [penwidth=2];
+  1 -- 6 [penwidth=2];
+  2 -- 7 [penwidth=2];
+  2 -- 8 [penwidth=2];
+  2 -- 9 [penwidth=2];
+  4 -- 10 [penwidth=2];
+  8 -- 11 [penwidth=2];
+  9 -- 12 [penwidth=2];
+  6 -- 13 [penwidth=2];
+  6 -- 14 [penwidth=2];
+}
